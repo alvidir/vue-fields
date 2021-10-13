@@ -1,22 +1,55 @@
 <template>
-<h1> Hello world </h1>
+<span id="container" class="rcorner">
+  <input v-model="content"
+          :maxlength="maxlength"
+          :type="type === PWD_INPUT_TYPE && show? TEXT_INPUT_TYPE : type"
+          :placeholder="placeholder">
+  <button v-if="type === PWD_INPUT_TYPE"
+          class="flex"
+              :class="{expanded: value,
+                      show: show}"
+              v-on:click="onClick">
+          {{ show? '&ndash;' : '&#x25E6;'}}
+  </button>
+</span>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue";
+import { defineComponent } from "vue"
+
+export const PWD_INPUT_TYPE = 'password'
+export const TEXT_INPUT_TYPE = 'text'
 
 export default defineComponent({
   name: "RegularField",
   components: {},
   
-  props: {},
+  props: {
+    placeholder: {
+      type: String,
+      default: "placeholder"
+    },
+
+    error: String,
+    maxlength: Number,
+
+    type: {
+      type: String,
+      default: "text",
+    }
+  },
 
   data () {
-      return { }
+      return {
+        content: "",
+        visible: false,
+      }
   },
 
   watch: {
-    
+    content(value: string) {
+      this.$emit('onChange', value)
+    }
   },
 
   computed: {
@@ -25,11 +58,43 @@ export default defineComponent({
 
   methods: { 
     
-  }
+  },
+
 })
 </script>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
+@import "fibonacci-styles";
+
+
+#container {
+  display: flex;
+  height: $fib-8 * 1px;
+
+  overflow: hidden;
+
+  border: blue solid;
+  border-color: blue;
+  transition: border-color $fib-8 * 0.01s,
+              color $fib-8 * 0.01s,
+              height $fib-7 * 0.01s;
+
+  &:hover {
+    border: $fib-2 * 1px solid;
+    border-color: blue;
+  }
+
+  &:focus-within, &.expanded{
+    height: $fib-9 * 1px;
+    border: $fib-2 * 1px solid;
+    border-color: blue;
+  }
+}
+
+input {
+  background: transparent;
+  width: 100%;
+}
 
 </style>
