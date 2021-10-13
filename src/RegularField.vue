@@ -1,23 +1,18 @@
+<template>
+<h1> Hello world </h1>
+</template>
+
 <script lang="ts">
-export default {
+import { defineComponent } from "vue";
+
+export default defineComponent({
   name: "RegularField",
-  props: {
-    error: String,
-    max: Number,
-
-    type: {
-      type: String,
-      default: "text",
-    }
-  },
-
   components: {},
+  
+  props: {},
 
   data () {
-      return {
-          content: "",
-          visible: false,
-      }
+      return { }
   },
 
   watch: {
@@ -31,12 +26,8 @@ export default {
   methods: { 
     
   }
-}
+})
 </script>
-
-<template>
-<h1> Hello world </h1>
-</template>
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
