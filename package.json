@@ -28,12 +28,12 @@
     "webpack": "^4.46.0"
   },
   "bugs": {
-    "url": "https://github.com/alvidir/vue-fields/issues"
+    "url": "https://github.com/alvidir/vue3-fields/issues"
   },
-  "homepage": "https://github.com/alvidir/vue-fields#readme",
+  "homepage": "https://github.com/alvidir/vue3-fields#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alvidir/vue-fields.git"
+    "url": "git+https://github.com/alvidir/vue3-fields.git"
   }
 }
