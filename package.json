@@ -1,7 +1,6 @@
 {
-  "name": "vue-fields",
+  "name": "vue3-fields",
   "version": "0.1.0",
-  "private": true,
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -27,5 +26,14 @@
     "sass-loader": "^8.0.2",
     "typescript": "~4.1.5",
     "webpack": "^4.46.0"
+  },
+  "bugs": {
+    "url": "https://github.com/alvidir/vue-fields/issues"
+  },
+  "homepage": "https://github.com/alvidir/vue-fields#readme",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/alvidir/vue-fields.git"
   }
 }
