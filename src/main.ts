@@ -6,7 +6,7 @@
 //  }
 // };
 
-// debugging
+// for debugging
 import { createApp } from 'vue'
 import RegularField from "./RegularField.vue";
 

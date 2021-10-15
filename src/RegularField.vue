@@ -1,5 +1,5 @@
 <template>
-  <span id="container" class="round-corners fib-16">
+  <span id="container" class="round-corners fib-5">
     <input v-model="content"
             :maxlength="maxlength"
             :type="type === PWD_INPUT_TYPE && show? TEXT_INPUT_TYPE : type"
@@ -73,7 +73,7 @@ export default defineComponent({
 
   overflow: hidden;
 
-  border: find-fib-color(success) solid;
+  border: $fib-1 * 1px find-fib-color(success) solid;
   border-color: find-fib-color(success);
   transition: border-color $fib-8 * 0.01s,
               color $fib-8 * 0.01s,
@@ -93,6 +93,7 @@ export default defineComponent({
 
 input {
   background: transparent;
+  border: none;
   width: 100%;
 }
 
