@@ -1,4 +1,4 @@
-# vue-fields
+# vue-ts-fields
 
 ## Project setup
 ```

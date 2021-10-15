@@ -1,5 +1,5 @@
 {
-  "name": "vue3-fields",
+  "name": "vue-ts-fields",
   "version": "0.1.0",
   "scripts": {
     "serve": "vue-cli-service serve",
@@ -29,12 +29,12 @@
     "webpack": "^4.46.0"
   },
   "bugs": {
-    "url": "https://github.com/alvidir/vue3-fields/issues"
+    "url": "https://github.com/alvidir/vue-ts-fields/issues"
   },
-  "homepage": "https://github.com/alvidir/vue3-fields#readme",
+  "homepage": "https://github.com/alvidir/vue-ts-fields#readme",
   "license": "MIT",
   "repository": {
     "type": "git",
-    "url": "git+https://github.com/alvidir/vue3-fields.git"
+    "url": "git+https://github.com/alvidir/vue-ts-fields.git"
   }
 }
