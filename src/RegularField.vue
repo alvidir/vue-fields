@@ -1,17 +1,17 @@
 <template>
-<span id="container" class="rcorner">
-  <input v-model="content"
-          :maxlength="maxlength"
-          :type="type === PWD_INPUT_TYPE && show? TEXT_INPUT_TYPE : type"
-          :placeholder="placeholder">
-  <button v-if="type === PWD_INPUT_TYPE"
-          class="flex"
-              :class="{expanded: value,
-                      show: show}"
-              v-on:click="onClick">
-          {{ show? '&ndash;' : '&#x25E6;'}}
-  </button>
-</span>
+  <span id="container" class="round-corners fib-16">
+    <input v-model="content"
+            :maxlength="maxlength"
+            :type="type === PWD_INPUT_TYPE && show? TEXT_INPUT_TYPE : type"
+            :placeholder="placeholder">
+    <button v-if="type === PWD_INPUT_TYPE"
+            class="flex"
+                :class="{expanded: value,
+                        show: show}"
+                v-on:click="onClick">
+            {{ show? '&ndash;' : '&#x25E6;'}}
+    </button>
+  </span>
 </template>
 
 <script lang="ts">
@@ -67,28 +67,27 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "fibonacci-styles";
 
-
 #container {
   display: flex;
   height: $fib-8 * 1px;
 
   overflow: hidden;
 
-  border: blue solid;
-  border-color: blue;
+  border: find-fib-color(success) solid;
+  border-color: find-fib-color(success);
   transition: border-color $fib-8 * 0.01s,
               color $fib-8 * 0.01s,
               height $fib-7 * 0.01s;
 
   &:hover {
     border: $fib-2 * 1px solid;
-    border-color: blue;
+    border-color: find-fib-color(success);
   }
 
   &:focus-within, &.expanded{
     height: $fib-9 * 1px;
     border: $fib-2 * 1px solid;
-    border-color: blue;
+    border-color: find-fib-color(success);
   }
 }
 
