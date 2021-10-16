@@ -43,7 +43,7 @@ export default defineComponent({
     error: String,
     type: {
       type: String,
-      default: "password",
+      default: "text",
     }
   },
 
@@ -118,48 +118,14 @@ label, button {
 }
 
 #button-container {
-  display: flex;
-  height: 100%;
-
-  position: absolute;
-  align-items: center;
   padding-right: $text-padding;
-
-  right: 0;
 }
 
 input {
-  height: fit-content;
-  font-size:  medium;
-
-  background: transparent;
-  border: none;
-  outline: none;
-  width: 100%;
-
   padding-left: $text-padding;
 
   &:focus, &.focused {
     padding-bottom: $text-padding;
-    transition: padding $fib-7 * 0.01s;
-  }
-}
-
-button {
-  background: transparent;
-  border: none;
-  outline: none;
-  
-  font-size: larger;
-  color: find-fib-color(success);
-
-  &:hover {
-    cursor: pointer;
-    font-weight: 900;
-  }
-
-  &.error {
-    color: find-fib-color(error);
   }
 }
 
