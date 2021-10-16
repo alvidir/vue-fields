@@ -35,11 +35,7 @@ export default defineComponent({
   components: {},
   
   props: {
-    placeholder: {
-      type: String,
-      default: "placeholder"
-    },
-
+    placeholder: String,
     error: String,
     type: {
       type: String,
