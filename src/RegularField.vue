@@ -1,24 +1,34 @@
 <template>
-  <span id="container" class="round-corners fib-5">
+  <span id="input-container"
+        class="round-corners fib-5"
+        :class="{focused: content, error: error}">
+    <span id="placeholder-container"
+          :class="{focused: focused || content}"
+          v-if="placeholder">
+      <label>{{placeholder}}</label>
+    </span>
     <input v-model="content"
-            :maxlength="maxlength"
-            :type="type === PWD_INPUT_TYPE && show? TEXT_INPUT_TYPE : type"
-            :placeholder="placeholder">
-    <button v-if="type === PWD_INPUT_TYPE"
-            class="flex"
-                :class="{expanded: value,
-                        show: show}"
-                v-on:click="onClick">
-            {{ show? '&ndash;' : '&#x25E6;'}}
-    </button>
+          :type="inputType"
+          :class="{focused: content}"
+          @focus="setInputFocus(true)"
+          @blur="setInputFocus(false)">
+    <span id="button-container"
+          v-if="showButton">
+      <button @click.capture="switchVisibilty()">
+        {{ visible? '&#9711;' : 'Aa'}}
+      </button>
+    </span>
+  </span>
+  <span id="error-container">
+    <label :class="{collapse: !error}">{{error}}</label>
   </span>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
 
-export const PWD_INPUT_TYPE = 'password'
-export const TEXT_INPUT_TYPE = 'text'
+const PWD_INPUT_TYPE = 'password'
+const TEXT_INPUT_TYPE = 'text'
 
 export default defineComponent({
   name: "RegularField",
@@ -31,33 +41,48 @@ export default defineComponent({
     },
 
     error: String,
-    maxlength: Number,
-
     type: {
       type: String,
-      default: "text",
+      default: "password",
     }
   },
 
   data () {
-      return {
-        content: "",
-        visible: false,
-      }
+    return {
+      content: "",
+      visible: false,
+      focused: false,
+    }
   },
 
   watch: {
-    content(value: string) {
-      this.$emit('onChange', value)
+    content() {
+      this.$emit('onChange', this.content)
     }
   },
 
   computed: {
+    showButton(): boolean {
+      return this.type === PWD_INPUT_TYPE && this.content.length > 0
+    },
 
+    inputType(): string {
+      if (this.type === PWD_INPUT_TYPE && !this.visible) {
+        return PWD_INPUT_TYPE
+      } else {
+        return TEXT_INPUT_TYPE
+      }
+    }
   },
 
   methods: { 
-    
+    setInputFocus(focus: boolean) {
+      this.focused = focus
+    },
+
+    switchVisibilty() {
+      this.visible = !this.visible
+    }
   },
 
 })
@@ -65,36 +90,77 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "fibonacci-styles";
+@import "styles.scss";
 
-#container {
-  display: flex;
-  height: $fib-8 * 1px;
+$text-padding: $fib-5 * 1px;
 
-  overflow: hidden;
+label, button {
+  font-family: Arial;
+}
 
-  border: $fib-1 * 1px find-fib-color(success) solid;
-  border-color: find-fib-color(success);
-  transition: border-color $fib-8 * 0.01s,
-              color $fib-8 * 0.01s,
-              height $fib-7 * 0.01s;
 
-  &:hover {
-    border: $fib-2 * 1px solid;
-    border-color: find-fib-color(success);
+#placeholder-container {
+  label {
+    padding-left: $text-padding;
   }
 
-  &:focus-within, &.expanded{
-    height: $fib-9 * 1px;
-    border: $fib-2 * 1px solid;
-    border-color: find-fib-color(success);
+  &.focused {
+    label {
+      padding-top: $text-padding;
+    }
   }
 }
 
+#error-container {
+  label {
+    padding-left: $text-padding;
+  }
+}
+
+#button-container {
+  display: flex;
+  height: 100%;
+
+  position: absolute;
+  align-items: center;
+  padding-right: $text-padding;
+
+  right: 0;
+}
+
 input {
+  height: fit-content;
+  font-size:  medium;
+
   background: transparent;
   border: none;
+  outline: none;
   width: 100%;
+
+  padding-left: $text-padding;
+
+  &:focus, &.focused {
+    padding-bottom: $text-padding;
+    transition: padding $fib-7 * 0.01s;
+  }
+}
+
+button {
+  background: transparent;
+  border: none;
+  outline: none;
+  
+  font-size: larger;
+  color: find-fib-color(success);
+
+  &:hover {
+    cursor: pointer;
+    font-weight: 900;
+  }
+
+  &.error {
+    color: find-fib-color(error);
+  }
 }
 
 </style>
