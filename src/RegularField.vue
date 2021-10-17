@@ -1,7 +1,9 @@
 <template>
   <span id="input-container"
         class="round-corners fib-5"
-        :class="{focused: content, error: error}">
+        :class="{focused: content,
+                 error: error,
+                 center: !placeholder}">
     <span id="placeholder-container"
           :class="{focused: focused || content}"
           v-if="placeholder">
@@ -15,7 +17,7 @@
     <span id="button-container"
           v-if="showButton">
       <button @click.capture="switchVisibilty()">
-        {{ visible? '&#9711;' : 'Aa'}}
+        {{ visible? '&#10033;' : 'Aa'}}
       </button>
     </span>
   </span>
@@ -51,12 +53,6 @@ export default defineComponent({
     }
   },
 
-  watch: {
-    content() {
-      this.$emit('onChange', this.content)
-    }
-  },
-
   computed: {
     showButton(): boolean {
       return this.type === PWD_INPUT_TYPE && this.content.length > 0
@@ -68,7 +64,7 @@ export default defineComponent({
       } else {
         return TEXT_INPUT_TYPE
       }
-    }
+    },
   },
 
   methods: { 
@@ -92,6 +88,17 @@ $text-padding: $fib-5 * 1px;
 
 label, button {
   font-family: Arial;
+}
+
+
+#input-container {
+  &.center {
+    align-items: center;
+
+    input {
+      padding-bottom: 0px;
+    }
+  }
 }
 
 

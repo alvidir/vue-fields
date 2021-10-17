@@ -1,6 +1,6 @@
 <template>
   <span id="placeholder-container"
-        :class="{focused: focused || hasContent, error: error}"
+        :class="{focused: focused || size, error: error}"
         v-if="title">
     <label>{{title}}</label>
   </span>
@@ -56,13 +56,13 @@ export default defineComponent({
   },
 
   computed: {
-    hasContent(): boolean {
-      let hasContent = false;
+    size(): number {
+      let size = 0;
       this.content.forEach((item) => {
-        hasContent = item.length > 0;
+        size += item.length;
       })
 
-      return hasContent;
+      return size;
     }
   },
 
@@ -78,7 +78,7 @@ export default defineComponent({
     onItemChange(index: number) {
       if (index == this.length-1 && this.content[index].length) {
         let value = this.content.join()
-        this.$emit("inputComplete", value)
+        this.$emit("complete", value)
         return
       }
 
@@ -87,7 +87,9 @@ export default defineComponent({
       }
 
       let next = this.content[index].length? ++index : --index
-      let item: any = this.$refs['item-' + next]
+      let ref = this.getInputRef(next)
+      // eslint-disable-next-line
+      let item: any = this.$refs[ref]
       item.focus()
     }
   },

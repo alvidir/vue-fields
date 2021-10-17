@@ -10,6 +10,6 @@ export default {
 
 // for debugging
 // import { createApp } from 'vue'
-// import DiscretField from "./DiscretField.vue";
+// import RegularField from "./RegularField.vue";
 
-// createApp(DiscretField).mount('#app')
+// createApp(RegularField).mount('#app')
