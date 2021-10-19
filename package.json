@@ -36,5 +36,13 @@
   "repository": {
     "type": "git",
     "url": "git+https://github.com/alvidir/vue-ts-fields.git"
-  }
+  },
+  "keywords": [
+    "input",
+    "fields",
+    "vue3",
+    "typescript",
+    "component",
+    "library"
+  ]
 }
