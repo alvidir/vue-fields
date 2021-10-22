@@ -4,17 +4,23 @@
         :class="{focused: content,
                  error: error,
                  center: !placeholder}">
-    <span id="placeholder-container"
-          v-if="placeholder"
-          :class="{focused: focused || content}">
-      <label>{{placeholder}}</label>
+    <span class="icon-container">
+      <slot name="icon"></slot>
     </span>
-    <input v-model="content"
-          ref="input"
-          :type="type"
-          :class="{focused: content}"
-          @focus="setInputFocus(true)"
-          @blur="setInputFocus(false)">
+    <span class="flexrow"
+          :class="{focused: focused || content}">
+      <span id="placeholder-container"
+            v-if="placeholder"
+            :class="{focused: focused || content}">
+        <label>{{placeholder}}</label>
+      </span>
+      <input v-model="content"
+            ref="input"
+            :type="type"
+            :class="{focused: content}"
+            @focus="setInputFocus(true)"
+            @blur="setInputFocus(false)">
+    </span>
 
     <span id="button-container"
           v-if="actions"
@@ -25,7 +31,6 @@
         <slot :name="action"></slot>
       </button>
     </span>
-    
   </span>
   <span id="error-container">
     <label :class="{collapse: !error}">{{error}}</label>
@@ -106,6 +111,10 @@ label, button {
       padding-bottom: 0px;
     }
   }
+
+  &:focus-within, &.focused{
+    align-items: center;
+  }
 }
 
 
@@ -140,11 +149,31 @@ label, button {
   }
 }
 
+#icon-container {
+  display: flex;
+  align-items: center;
+
+  height: 100% !important;
+  width: fit-content;
+}
+
 input {
   padding-left: $text-padding;
 
   &:focus, &.focused {
     padding-bottom: $text-padding;
+  }
+}
+
+.flexrow {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  &:focus-within, &.focused{
+    align-items: flex-end;
   }
 }
 

@@ -11,7 +11,7 @@ export default {
 };
 
 // for debugging
-// import { createApp } from 'vue'
-// import Demo from "./demo.vue";
+import { createApp } from 'vue'
+import Demo from "./demo.vue";
 
-// createApp(Demo).mount('#app')
+createApp(Demo).mount('#app')
