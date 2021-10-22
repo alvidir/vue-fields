@@ -4,7 +4,8 @@
         :class="{focused: content,
                  error: error,
                  center: !placeholder}">
-    <span class="icon-container">
+    <span id="icon-container"
+          v-if="hasIcon">
       <slot name="icon"></slot>
     </span>
     <span class="flexrow"
@@ -69,6 +70,10 @@ export default defineComponent({
   computed: {
     getActions() {
       return this.actions?.filter(action => !!this.$slots[action as string])
+    },
+
+    hasIcon(): boolean {
+      return !!this.$slots.icon
     }
   },
 
@@ -150,11 +155,7 @@ label, button {
 }
 
 #icon-container {
-  display: flex;
-  align-items: center;
-
-  height: 100% !important;
-  width: fit-content;
+  padding-left: $text-padding;
 }
 
 input {
