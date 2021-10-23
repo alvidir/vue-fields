@@ -41,7 +41,7 @@ export default defineComponent({
     error: String,
     type: {
       type: String,
-      default: "text",
+      default: TEXT_INPUT_TYPE,
     }
   },
 

@@ -28,23 +28,27 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
-const INPUT_REF_PREFIX = 'item-'
+const INPUT_REF_PREFIX = "item-"
+const TEXT_INPUT_TYPE = "text"
+const COMPLETE_EVENT_NAME = "complete"
+const DEFAULT_INPUT_LEN = 6
 
 export default defineComponent({
   name: "DiscretField",
+  emits: [COMPLETE_EVENT_NAME],
   components: {},
   
   props: {
     title: String,
     length: {
       type: Number,
-      default: 6,
+      default: DEFAULT_INPUT_LEN,
     },
 
     error: String,
     type: {
       type: String,
-      default: "text",
+      default: TEXT_INPUT_TYPE,
     }
   },
 
@@ -78,7 +82,7 @@ export default defineComponent({
     onItemChange(index: number) {
       if (index == this.length-1 && this.content[index].length) {
         let value = this.content.join()
-        this.$emit("complete", value)
+        this.$emit(COMPLETE_EVENT_NAME, value)
         return
       }
 

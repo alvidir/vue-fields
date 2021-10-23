@@ -41,6 +41,9 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
+const TEXT_INPUT_TYPE = "text"
+const CLICK_EVENT_NAME = "click"
+
 interface Focusable {
     focus: () => void
 }
@@ -48,7 +51,7 @@ interface Focusable {
 export default defineComponent({
   name: "ActionField",
   components: {},
-  emits: ["click"],
+  emits: [CLICK_EVENT_NAME],
   
   props: {
     actions: Array,
@@ -56,7 +59,7 @@ export default defineComponent({
     error: String,
     type: {
       type: String,
-      default: "text",
+      default: TEXT_INPUT_TYPE,
     }
   },
 
@@ -88,7 +91,7 @@ export default defineComponent({
         return input.focus()
       }
 
-      this.$emit("click", {
+      this.$emit(CLICK_EVENT_NAME, {
         action: action,
         value: this.content,
       })
