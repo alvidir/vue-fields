@@ -20,6 +20,10 @@ label, button {
   
     &.error {
         border-color: find-fib-color(error) !important;
+
+        input {
+            color: find-fib-color(error) !important;
+        }
     }
   
     &:hover {
@@ -70,6 +74,7 @@ label, button {
     color: find-fib-color(error);
   
     label {
+        margin-top: $fib-4 * 1px;
         font-size:  smaller;
         transition: transform $fib-8 * 0.01s,
                     color $fib-8 * 0.01s;

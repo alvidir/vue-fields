@@ -40,6 +40,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
+import  ButtonSet from "vue-ts-buttons"
 
 const TEXT_INPUT_TYPE = "text"
 const CLICK_EVENT_NAME = "click"
@@ -50,7 +51,9 @@ interface Focusable {
 
 export default defineComponent({
   name: "ActionField",
-  components: {},
+  components: {
+    ButtonSet,
+  },
   emits: [CLICK_EVENT_NAME],
   
   props: {
