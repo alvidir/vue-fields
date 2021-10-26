@@ -9,7 +9,7 @@
       <slot name="icon"></slot>
     </span>
     <span class="flexrow"
-          :class="{focused: focused || content}">
+          :class="{focused: (focused || content) && placeholder}">
       <span id="placeholder-container"
             v-if="placeholder"
             :class="{focused: focused || content}">
@@ -26,11 +26,13 @@
     <span id="button-container"
           v-if="actions"
           :class="{hidden: !content}">
-      <button v-for="action in getActions"
-              :key="action"
-              @click.stop="onActionClicked(action)">
-        <slot :name="action"></slot>
-      </button>
+      <button-set :actions="availableActions">
+       <template v-for="action in availableActions"
+                :key="action"
+                v-slot:[action]>
+            <slot :name="action"></slot>
+        </template>
+      </button-set>
     </span>
   </span>
   <span id="error-container">
@@ -40,7 +42,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import  ButtonSet from "vue-ts-buttons"
+import ButtonSet from "vue-ts-buttons/src/ButtonSet.vue"
 
 const TEXT_INPUT_TYPE = "text"
 const CLICK_EVENT_NAME = "click"
@@ -74,7 +76,7 @@ export default defineComponent({
   },
 
   computed: {
-    getActions() {
+    availableActions() {
       return this.actions?.filter(action => !!this.$slots[action as string])
     },
 
@@ -111,6 +113,14 @@ $text-padding: $fib-5 * 1px;
 
 label, button {
   font-family: Arial;
+}
+
+#button-container {
+  border: 0px !important;
+}
+
+button {
+  border-right: 0px !important;
 }
 
 
@@ -179,7 +189,7 @@ input {
   width: 100%;
   height: 100%;
 
-  &:focus-within, &.focused{
+  &.focused{
     align-items: flex-end;
   }
 }
