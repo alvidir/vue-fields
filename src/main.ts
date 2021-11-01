@@ -1,9 +1,12 @@
 import RegularField from "./RegularField.vue";
 import DiscretField from "./DiscretField.vue";
-import ActionField from "./ActionField.vue";
 
 export {
     RegularField,
-    DiscretField,
-    ActionField
+    DiscretField
 }
+
+import { createApp } from 'vue'
+import Demo from "./demo.vue"
+
+createApp(Demo).mount('#app')

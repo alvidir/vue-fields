@@ -1,5 +1,7 @@
 @import "fibonacci-styles";
 
+$text-padding: $fib-5 * 1px !default;
+
 label, button {
     font-family: Arial;
 }
@@ -21,7 +23,7 @@ label, button {
     &.error {
         border-color: find-fib-color(error) !important;
 
-        input {
+        input, button {
             color: find-fib-color(error) !important;
         }
     }
@@ -72,10 +74,14 @@ label, button {
     z-index: -1;
   
     color: find-fib-color(error);
+    transition: height $fib-8 * 0.01s;
   
     label {
         margin-top: $fib-4 * 1px;
+        margin-bottom: $fib-4 * 1px;
+
         font-size:  smaller;
+        padding-left: $text-padding;
         transition: transform $fib-8 * 0.01s,
                     color $fib-8 * 0.01s;
 
@@ -84,17 +90,8 @@ label, button {
             transform: translate(0, -100%);
         }
     }
+
 }  
-  
-#button-container {
-    display: flex;
-    height: 100%;
-  
-    position: absolute;
-    align-items: center;
-  
-    right: 0;
-}
 
 input {
     height: fit-content;
@@ -111,18 +108,17 @@ input {
 }
 
 button {
-    background: transparent;
-    border: none;
-    outline: none;
+    border: none !important;
+    outline: none !important;
+    background: transparent !important;
+
+    height: 100%;
+    width: 100%;
 
     font-size: larger;
     color: find-fib-color(success);
 
     &:hover {
-        cursor: pointer;
-    }
-
-    &.error {
-        color: find-fib-color(error);
+        cursor:pointer;
     }
 }

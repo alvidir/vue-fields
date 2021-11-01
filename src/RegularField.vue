@@ -4,22 +4,33 @@
         :class="{focused: content,
                  error: error,
                  center: !placeholder}">
-    <span id="placeholder-container"
-          :class="{focused: focused || content}"
-          v-if="placeholder">
-      <label>{{placeholder}}</label>
+    <span id="icon-container"
+          v-if="hasIcon">
+      <slot name="icon"></slot>
     </span>
-    <input v-model="content"
-          :type="inputType"
-          :class="{focused: content}"
-          @focus="setInputFocus(true)"
-          @blur="setInputFocus(false)">
-    <span id="button-container"
-          v-if="showButton">
-      <button @click.capture="switchVisibilty()">
-        {{ visible? '&#10033;' : 'Aa'}}
-      </button>
+
+    <span class="flexrow"
+          :class="{focused: (focused || content) && placeholder}">
+      <span id="placeholder-container"
+            :class="{focused: focused || content}"
+            v-if="placeholder">
+        <label :class="{ident: !hasIcon}">{{placeholder}}</label>
+      </span>
+      <input v-model="content"
+            :type="inputType"
+            :class="{focused: content,
+                     ident: !hasIcon}"
+            @focus="setInputFocus(true)"
+            @blur="setInputFocus(false)">
     </span>
+
+    <button id="field-action"
+            v-if="showButton || hasAction"
+            :class="{fixed: !hasAction}"
+            @click.capture="onActionClicked">
+      <slot v-if="hasAction" name="action"></slot>
+      <text v-else>{{ visible? '&#10033;' : 'Aa'}}</text>
+    </button>
   </span>
   <span id="error-container">
     <label :class="{collapse: !error}">{{error}}</label>
@@ -29,12 +40,15 @@
 <script lang="ts">
 import { defineComponent } from "vue"
 
+const CLICK_EVENT_NAME = "click"
 const PWD_INPUT_TYPE = 'password'
 const TEXT_INPUT_TYPE = 'text'
 
 export default defineComponent({
   name: "RegularField",
   components: {},
+
+  emits: [CLICK_EVENT_NAME],
   
   props: {
     placeholder: String,
@@ -54,6 +68,14 @@ export default defineComponent({
   },
 
   computed: {
+    hasIcon(): boolean {
+      return !!this.$slots.icon
+    },
+
+    hasAction(): boolean {
+      return !!this.$slots.action
+    },
+
     showButton(): boolean {
       return this.type === PWD_INPUT_TYPE && this.content.length > 0
     },
@@ -72,7 +94,12 @@ export default defineComponent({
       this.focused = focus
     },
 
-    switchVisibilty() {
+    onActionClicked() {
+      if (this.hasAction) {
+        this.$emit(CLICK_EVENT_NAME, this.content)
+        return
+      }
+
       this.visible = !this.visible
     }
   },
@@ -84,12 +111,26 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "styles.scss";
 
-$text-padding: $fib-5 * 1px;
+#icon-container {
+  display: flex;
+  align-items: center;
+  justify-content: center;
 
-label, button {
-  font-family: Arial;
+  height: 100%;
+  min-width: $fib-9 * 1px;
 }
 
+#placeholder-container {
+  label.ident {
+    padding-left: $text-padding;
+  }
+
+  &.focused {
+    label {
+      padding-top: $text-padding;
+    }
+  }
+}
 
 #input-container {
   &.center {
@@ -101,34 +142,34 @@ label, button {
   }
 }
 
+button#field-action { 
+  height: 100%;
+  width: fit-content;
 
-#placeholder-container {
-  label {
-    padding-left: $text-padding;
+  &.fixed {
+    width: $fib-9 * 1px;
   }
-
-  &.focused {
-    label {
-      padding-top: $text-padding;
-    }
-  }
-}
-
-#error-container {
-  label {
-    padding-left: $text-padding;
-  }
-}
-
-#button-container {
-  padding-right: $text-padding;
 }
 
 input {
-  padding-left: $text-padding;
+  &.ident {
+    padding-left: $text-padding;
+  }
 
   &:focus, &.focused {
     padding-bottom: $text-padding;
+  }
+}
+
+.flexrow {
+  display: flex;
+  align-items: center;
+
+  width: 100%;
+  height: 100%;
+
+  &.focused{
+    align-items: flex-end;
   }
 }
 

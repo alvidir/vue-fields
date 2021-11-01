@@ -1,6 +1,6 @@
 {
   "name": "vue-ts-fields",
-  "version": "0.1.9",
+  "version": "0.1.10",
   "scripts": {
     "serve": "vue-cli-service serve",
     "build": "vue-cli-service build",
@@ -11,7 +11,7 @@
     "core-js": "^3.6.5",
     "fibonacci-styles": "^1.1.6",
     "vue": "^3.0.0",
-    "vue-ts-buttons": "^0.1.6"
+    "vue-ts-buttons": "^0.1.9"
   },
   "devDependencies": {
     "@typescript-eslint/eslint-plugin": "^4.18.0",

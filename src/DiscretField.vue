@@ -11,8 +11,8 @@
           :key="index"
           :class="{focused: content[index], error: error}">
       <input maxlength="1"
+             v-model="content[index]"
             :ref="getInputRef(index)"
-            v-model="content[index]"
             :type="type"
             :class="{focused: content[index]}"
             @input="onItemChange(index)"
@@ -81,7 +81,7 @@ export default defineComponent({
 
     onItemChange(index: number) {
       if (index == this.length-1 && this.content[index].length) {
-        let value = this.content.join()
+        let value = this.content.join('')
         this.$emit(COMPLETE_EVENT_NAME, value)
         return
       }
@@ -104,13 +104,6 @@ export default defineComponent({
 <style scoped lang="scss">
 @import "styles.scss";
 
-$text-padding: $fib-5 * 1px;
-
-label, button {
-  font-family: Arial;
-}
-
-
 #placeholder-container {
   position: relative;
   margin-bottom: $text-padding;
@@ -128,6 +121,7 @@ label, button {
     label {
       font-size: smaller;
       padding-top: $text-padding;
+      font-weight: 700;
     }
   }
 }
@@ -149,12 +143,6 @@ label, button {
 
     width: $fib-8 * 1px;
     text-align: center;
-  }
-}
-
-#error-container {
-  label {
-    padding-left: $text-padding;
   }
 }
 
