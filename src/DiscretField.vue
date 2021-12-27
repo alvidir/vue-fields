@@ -102,56 +102,6 @@ export default defineComponent({
 
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
-@import "styles.scss";
-
-#placeholder-container {
-  position: relative;
-  margin-bottom: $text-padding;
-
-  label {
-    opacity: 100% !important;
-    padding-left: $text-padding;
-  }
-
-  &.error {
-    color: find-fib-color(error);
-  }
-
-  &.focused {
-    label {
-      font-size: smaller;
-      padding-top: $text-padding;
-      font-weight: 700;
-    }
-  }
-}
-
-#array-container {
-    display: flex;
-    align-items: center;
-}
-
-#input-container {
-  align-items: center !important;
-  width: fit-content;
-  
-  margin-left: $fib-4 * 1px;
-  margin-right: $fib-4 * 1px;
-
-  input {
-    padding: 0;
-
-    width: $fib-8 * 1px;
-    text-align: center;
-  }
-}
-
-input {
-  padding-left: $text-padding;
-
-  &:focus, &.focused {
-    padding-bottom: $text-padding;
-  }
-}
+@import "global.scss";
 
 </style>

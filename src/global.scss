@@ -1,0 +1,38 @@
+@use "sass:math";
+@import "fibonacci-styles";
+
+$default-height: $fib-8 * 1px !default;
+
+a {
+    text-decoration: none;
+}
+
+button {
+    width: 100%;
+    height: 100%;
+    background: transparent;
+    border: none;
+    padding: 0px;
+
+    &:hover {
+        cursor: pointer;
+    }
+}
+
+input {
+    height: 100%;
+    width: 100%;
+    background: transparent;
+    outline: none;
+    border: none;
+}
+
+.input-container {
+    @extend .round-corners, .fib-5;
+
+    display: flex;
+    width: 100%;
+    border: $fib-1 * 2px solid;
+    border-color: find-fib-color(success);
+    min-height: $default-height;
+}
