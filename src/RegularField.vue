@@ -6,8 +6,14 @@
       <slot>
         <label v-if="placeholder"
                @click="focus"> {{placeholder}} </label>
-        <input ref="entry" v-model="content"/>
+        <input ref="entry"
+               v-model="content"
+               :type="inputType"/>
       </slot>
+      <button :class="{active: showButton}"
+              @click="switchVisibility">
+        {{ visible? '&#10033;' : 'Aa'}}
+      </button>
     </div>
     <div class="error-container">
       <slot name="error" :error="error">
@@ -19,10 +25,7 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-
-const CLICK_EVENT_NAME = "click"
-export const PWD_INPUT_TYPE = 'password'
-export const TEXT_INPUT_TYPE = 'text'
+import { CLICK_EVENT_NAME, PASSWORD_INPUT_TYPE, TEXT_INPUT_TYPE } from "./constants"
 
 export default defineComponent({
   name: "RegularField",
@@ -43,7 +46,6 @@ export default defineComponent({
     return {
       content: "",
       visible: false,
-      focused: false,
     }
   },
 
@@ -53,12 +55,12 @@ export default defineComponent({
     },
 
     showButton(): boolean {
-      return this.type === PWD_INPUT_TYPE && this.content.length > 0
+      return this.type == PASSWORD_INPUT_TYPE && this.content.length > 0
     },
 
     inputType(): string {
-      if (this.type === PWD_INPUT_TYPE && !this.visible) {
-        return PWD_INPUT_TYPE
+      if (this.type === PASSWORD_INPUT_TYPE && !this.visible) {
+        return PASSWORD_INPUT_TYPE
       } else {
         return TEXT_INPUT_TYPE
       }
@@ -70,6 +72,10 @@ export default defineComponent({
       let entryRef: any = this.$refs.entry
       entryRef.focus()
     },
+
+    switchVisibility() {
+      this.visible = !this.visible
+    }
   },
 
 })
@@ -97,17 +103,37 @@ export default defineComponent({
 
   .input-container {
     position: relative;
-    overflow: hidden;
 
     label, input {
-      position: absolute;
       height: $default-height;
       line-height: $default-height;
       padding-left: $margin-bounds;
     }
 
     label {
+      position: absolute;
       cursor:text;
+    }
+
+    input {
+      width: 100%;
+      margin-top: auto;
+      font-size: 1em;
+      z-index: 1;
+    }
+
+    button {
+      min-width: $active-height !important;
+      font-size: 1rem;
+      opacity: 0%;
+      
+      &:hover {
+        font-weight: 800;
+      }
+
+      &.active {
+        opacity: 100%;
+      }
     }
   }
 
@@ -119,13 +145,6 @@ export default defineComponent({
       font-size: $small-font-size;
       font-weight: 600;
     }
-  }
-
-  input {
-    width: 100%;
-    bottom: 0px;
-    font-size: 1em;
-    z-index: 1;
   }
 }
 

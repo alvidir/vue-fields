@@ -13,11 +13,15 @@ a {
 }
 
 button {
-    width: 100%;
-    height: 100%;
+    width: fit-content;
+    height: $default-height;
+    color: $default-color;
     background: transparent;
     border: none;
     padding: 0px;
+
+    transition: height $transition-lapse,
+                opacity $transition-lapse;
 
     &:hover {
         cursor: pointer;
@@ -34,6 +38,10 @@ input {
 
 .active {
     min-height: $active-height;
+
+    button {
+        height: $active-height;
+    }
 }
 
 .input-container {
@@ -49,6 +57,10 @@ input {
 
     &.error {
         border-color: $error-color;
+
+        button {
+            color: $error-color;
+        }
     }
 
     label {
