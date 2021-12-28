@@ -1,8 +1,9 @@
 <template>
-  <div class="regular-field">
+  <div class="regular-field"
+      :class="{active: content.length}">
     <div class="input-container">
-      <span v-if="placeholder"> {{placeholder}} </span>
-      <input v-model="content"/>
+      <label v-if="placeholder"> {{placeholder}} </label>
+      <input red="entry" v-model="content"/>
     </div>
   </div>
 </template>
@@ -38,14 +39,6 @@ export default defineComponent({
   },
 
   computed: {
-    hasIcon(): boolean {
-      return !!this.$slots.icon
-    },
-
-    hasAction(): boolean {
-      return !!this.$slots.action
-    },
-
     showButton(): boolean {
       return this.type === PWD_INPUT_TYPE && this.content.length > 0
     },
@@ -65,10 +58,10 @@ export default defineComponent({
     },
 
     onActionClicked() {
-      if (this.hasAction) {
-        this.$emit(CLICK_EVENT_NAME, this.content)
-        return
-      }
+      // if (this.hasAction) {
+      //   this.$emit(CLICK_EVENT_NAME, this.content)
+      //   return
+      // }
 
       this.visible = !this.visible
     }
@@ -82,18 +75,38 @@ export default defineComponent({
 @import "global.scss";
 
 .regular-field {
+  $margin-bounds: $fib-6 * 1px;
+
   height: fit-content;
   width: 100%;
 
-  .input-container {
-    padding-left: $fib-6 * 1px;
+  &:focus-within, &.active {
+    .input-container {
+      @extend .active;
+    }
+
+    label {
+      font-size: $fib-6 * 1px;
+    }
   }
 
-  span {
-    position: absolute;
-    width: 100%;
-    height: $default-height;
-    line-height: $default-height;
+  .input-container {
+    position: relative;
+    padding-left: $margin-bounds;
+    padding-right: $margin-bounds;
+
+    label, input {
+      position: absolute;
+      width: 100%;
+      height: $default-height;
+      line-height: $default-height;
+    }
+  }
+
+  input {
+    bottom: 0px;
+    font-size: 1em;
+    z-index: 1;
   }
 }
 
