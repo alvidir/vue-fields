@@ -1,9 +1,12 @@
 @use "sass:math";
 @import "fibonacci-styles";
 
-$transition-lapse: $fib-8 * 0.01s ease-in-out !default;
+$transition-lapse: $fib-7 * 0.01s ease-in-out !default;
 $default-height: $fib-8 * 1px !default;
 $active-height: $fib-9 * 1px !default;
+$small-font-size: $fib-6 * 1px !default;
+$default-color: find-fib-color(success);
+$error-color: find-fib-color(error);
 
 a {
     text-decoration: none;
@@ -38,10 +41,15 @@ input {
 
     display: flex;
     width: 100%;
-    border: $fib-1 * 2px solid;
-    border-color: find-fib-color(success);
+    border: $fib-2 * 1px solid;
+    border-color: $default-color;
     min-height: $default-height;
-    transition: min-height $transition-lapse;
+    transition: min-height $transition-lapse,
+                background $transition-lapse;
+
+    &.error {
+        border-color: $error-color;
+    }
 
     label {
         opacity: $fib-9 * 1%;
