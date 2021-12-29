@@ -7,6 +7,7 @@ $active-height: $fib-9 * 1px !default;
 $small-font-size: $fib-6 * 1px !default;
 $default-color: find-fib-color(success);
 $error-color: find-fib-color(error);
+$margin-bounds: $fib-6 * 1px;
 
 a {
     text-decoration: none;
@@ -34,9 +35,11 @@ input {
     background: transparent;
     outline: none;
     border: none;
+    font-size: 1em;
+    z-index: 1;
 }
 
-.active {
+.active, .large {
     min-height: $active-height;
 
     button {
@@ -44,27 +47,38 @@ input {
     }
 }
 
-.input-container {
+.border-line {
     @extend .round-corners, .fib-5;
+    border: $fib-2 * 1px solid;
+    border-color: $default-color;
+
+    &.error {
+        border-color: $error-color;
+    }
+}
+
+.input-container {
+    @extend .border-line;
 
     display: flex;
     width: 100%;
-    border: $fib-2 * 1px solid;
-    border-color: $default-color;
     min-height: $default-height;
     transition: min-height $transition-lapse,
                 background $transition-lapse;
 
-    &.error {
-        border-color: $error-color;
-
-        button {
-            color: $error-color;
-        }
-    }
-
     label {
         opacity: $fib-9 * 1%;
-        transition: font-size $transition-lapse;
+        transition: font-size $transition-lapse,
+                    line-height $transition-lapse;
+    }
+}
+
+.error-container {
+    padding-bottom: $margin-bounds;
+    color: $error-color;
+    
+    span {
+      font-size: $small-font-size;
+      font-weight: 600;
     }
 }

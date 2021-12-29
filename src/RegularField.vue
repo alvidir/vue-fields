@@ -1,23 +1,25 @@
 <template>
   <div class="regular-field"
-      :class="{active: content.length}">
+      :class="{active: value.length, large: large}">
     <div class="input-container"
         :class="{error: hasError}">
       <slot>
         <label v-if="placeholder"
                @click="focus"> {{placeholder}} </label>
         <input ref="entry"
-               v-model="content"
-               :type="inputType"/>
+               v-model="value"
+               :type="inputType"
+               @input="onChange"/>
       </slot>
       <button :class="{active: showButton}"
               @click="switchVisibility">
         {{ visible? '&#10033;' : 'Aa'}}
       </button>
     </div>
-    <div class="error-container">
+    <div class="error-container"
+         v-if="hasError">
       <slot name="error" :error="error">
-        <span v-if="hasError">{{error}}</span>
+        <span>{{error}}</span>
       </slot>
     </div>
   </div>
@@ -25,17 +27,24 @@
 
 <script lang="ts">
 import { defineComponent } from "vue"
-import { CLICK_EVENT_NAME, PASSWORD_INPUT_TYPE, TEXT_INPUT_TYPE } from "./constants"
+import {
+  INPUT_EVENT_NAME,
+  PASSWORD_INPUT_TYPE,
+  TEXT_INPUT_TYPE,
+} from "./constants"
 
 export default defineComponent({
   name: "RegularField",
   components: {},
 
-  emits: [CLICK_EVENT_NAME],
+  emits: [
+    INPUT_EVENT_NAME,
+  ],
   
   props: {
     placeholder: String,
     error: String,
+    large: Boolean,
     type: {
       type: String,
       default: TEXT_INPUT_TYPE,
@@ -44,7 +53,7 @@ export default defineComponent({
 
   data () {
     return {
-      content: "",
+      value: "",
       visible: false,
     }
   },
@@ -55,7 +64,7 @@ export default defineComponent({
     },
 
     showButton(): boolean {
-      return this.type == PASSWORD_INPUT_TYPE && this.content.length > 0
+      return this.type == PASSWORD_INPUT_TYPE && this.value.length > 0
     },
 
     inputType(): string {
@@ -75,6 +84,10 @@ export default defineComponent({
 
     switchVisibility() {
       this.visible = !this.visible
+    },
+
+    onChange() {
+      this.$emit(INPUT_EVENT_NAME, this.value)
     }
   },
 
@@ -86,9 +99,7 @@ export default defineComponent({
 @import "global.scss";
 
 .regular-field {
-  $margin-bounds: $fib-6 * 1px;
-
-  height: fit-content;
+  height: fit-value;
   width: 100%;
 
   &:focus-within, &.active {
@@ -98,6 +109,12 @@ export default defineComponent({
 
     label {
       font-size: $small-font-size;
+    }
+  }
+
+  &:not(.active).large:not(:focus-within) {
+    label {
+      line-height: $active-height !important;
     }
   }
 
@@ -118,8 +135,6 @@ export default defineComponent({
     input {
       width: 100%;
       margin-top: auto;
-      font-size: 1em;
-      z-index: 1;
     }
 
     button {
@@ -135,16 +150,16 @@ export default defineComponent({
         opacity: 100%;
       }
     }
+
+    &.error {
+      button, input {
+        color: $error-color;
+      }
+    }
   }
 
   .error-container {
     padding-left: $margin-bounds;
-    color: $error-color;
-
-    span {
-      font-size: $small-font-size;
-      font-weight: 600;
-    }
   }
 }
 

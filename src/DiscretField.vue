@@ -1,51 +1,58 @@
 <template>
-  <span id="placeholder-container"
-        :class="{focused: focused || size, error: error}"
-        v-if="title">
-    <label>{{title}}</label>
-  </span>
-  <span id="array-container">
-    <span id="input-container"
-          class="round-corners fib-5"
-          v-for="(item, index) in content"
-          :key="index"
-          :class="{focused: content[index], error: error}">
-      <input maxlength="1"
-             v-model="content[index]"
-            :ref="getInputRef(index)"
+  <div class="discret-field">
+    <label v-if="placeholder"
+          @click="focus"> {{placeholder}} </label>
+    <div class="inputs-container">
+      <input maxlength="1" 
+             ref="entry"
+             v-for="(item, index) in value"
+             v-model="value[index]"
+            :key="index"
+            :class="{active: value[index] || large,
+                     final: index == length-1,
+                     error: hasError}"
             :type="type"
-            :class="{focused: content[index]}"
             @input="onItemChange(index)"
             @focus="setInputFocus(1)"
-            @blur="setInputFocus(-1)">
-    </span>
-  </span>
-  <span id="error-container">
-    <label :class="{collapse: !error}">{{error}}</label>
-  </span>
+            @blur="setInputFocus(-1)"/>
+    </div>
+    <div class="error-container">
+      <slot name="error" :error="error">
+        <span>{{error}}</span>
+      </slot>
+    </div>
+  </div>
 </template>
 
 <script lang="ts">
 import { defineComponent } from "vue"
+import {
+  INPUT_EVENT_NAME,
+  TEXT_INPUT_TYPE,
+} from "./constants"
 
 const INPUT_REF_PREFIX = "item-"
-const TEXT_INPUT_TYPE = "text"
 const COMPLETE_EVENT_NAME = "complete"
 const DEFAULT_INPUT_LEN = 6
 
 export default defineComponent({
   name: "DiscretField",
-  emits: [COMPLETE_EVENT_NAME],
+  
+  emits: [
+    INPUT_EVENT_NAME,
+    COMPLETE_EVENT_NAME
+  ],
+
   components: {},
   
   props: {
-    title: String,
+    placeholder: String,
+    error: String,
+    large: Boolean,
     length: {
       type: Number,
       default: DEFAULT_INPUT_LEN,
     },
-
-    error: String,
     type: {
       type: String,
       default: TEXT_INPUT_TYPE,
@@ -54,20 +61,19 @@ export default defineComponent({
 
   data () {
     return {
-      content: new Array<string>(this.length),
+      value: new Array<string>(this.length),
       focused: 0,
     }
   },
 
   computed: {
     size(): number {
-      let size = 0;
-      this.content.forEach((item) => {
-        size += item.length;
-      })
+      return this.value.filter(item => item.length).length;
+    },
 
-      return size;
-    }
+    hasError(): boolean {
+      return this.error != undefined && this.error.length > 0
+    },
   },
 
   methods: { 
@@ -80,21 +86,14 @@ export default defineComponent({
     },
 
     onItemChange(index: number) {
-      if (index == this.length-1 && this.content[index].length) {
-        let value = this.content.join('')
+      if (this.size == this.length) {
+        let value = this.value.join('')
         this.$emit(COMPLETE_EVENT_NAME, value)
-        return
       }
 
-      if (!index && !this.content[index].length) {
-        return
-      }
-
-      let next = this.content[index].length? ++index : --index
-      let ref = this.getInputRef(next)
-      // eslint-disable-next-line
-      let item: any = this.$refs[ref]
-      item.focus()
+      let next = this.value[index].length? ++index : --index
+      let entryRef: any = this.$refs['entry']
+      entryRef[next]?.focus()
     }
   },
 })
@@ -103,5 +102,45 @@ export default defineComponent({
 <!-- Add "scoped" attribute to limit CSS to this component only -->
 <style scoped lang="scss">
 @import "global.scss";
+
+.discret-field {
+  label {
+    height: $default-height;
+    line-height: $default-height;
+    transition: font-size $transition-lapse;
+  }
+
+  &.active label, &:focus-within label {
+    font-size: $small-font-size;
+  }
+
+  .inputs-container {
+    display: flex;
+    flex-direction: row;
+    align-items: center;
+
+    input {
+      @extend .border-line;
+      max-width: $default-height;
+      min-height: $default-height;
+      line-height: $default-height;
+      text-align: center;
+
+      transition: min-height $transition-lapse;
+
+      &:not(.final) {
+        margin-right: $margin-bounds;
+      }
+
+      &.active, &:focus-within {
+        min-height: $active-height;
+      }
+
+      &.error {
+        color: $error-color;
+      }
+    }
+  }
+}
 
 </style>
