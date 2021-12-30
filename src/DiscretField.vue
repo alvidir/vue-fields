@@ -8,13 +8,12 @@
              v-for="(item, index) in value"
              v-model="value[index]"
             :key="index"
-            :class="{active: value[index] || large,
+            :class="{active: value[index],
+                     large: large,
                      final: index == length-1,
                      error: hasError}"
             :type="type"
-            @input="onItemChange(index)"
-            @focus="setInputFocus(1)"
-            @blur="setInputFocus(-1)"/>
+            @input="onItemChange(index)"/>
     </div>
     <div class="error-container">
       <slot name="error" :error="error">
@@ -31,7 +30,6 @@ import {
   TEXT_INPUT_TYPE,
 } from "./constants"
 
-const INPUT_REF_PREFIX = "item-"
 const COMPLETE_EVENT_NAME = "complete"
 const DEFAULT_INPUT_LEN = 6
 
@@ -77,14 +75,6 @@ export default defineComponent({
   },
 
   methods: { 
-    getInputRef(index: number) {
-      return INPUT_REF_PREFIX + index;
-    },
-
-    setInputFocus(alpha: number) {
-      this.focused += alpha
-    },
-
     onItemChange(index: number) {
       if (this.size == this.length) {
         let value = this.value.join('')
@@ -126,10 +116,15 @@ export default defineComponent({
       line-height: $default-height;
       text-align: center;
 
-      transition: min-height $transition-lapse;
+      transition: min-height $transition-lapse,
+                  border-color $transition-lapse;
 
       &:not(.final) {
         margin-right: $margin-bounds;
+      }
+
+      &.active {
+        border-color: $default-color;
       }
 
       &.active, &:focus-within {

@@ -7,6 +7,7 @@ $active-height: $fib-9 * 1px !default;
 $small-font-size: $fib-6 * 1px !default;
 $default-color: find-fib-color(success);
 $error-color: find-fib-color(error);
+$unactive-color: find-fib-color(disabled);
 $margin-bounds: $fib-6 * 1px;
 
 a {
@@ -52,8 +53,12 @@ input {
     border: $fib-2 * 1px solid;
     border-color: $default-color;
 
+    &:not(:focus-within) {
+        border-color: $unactive-color;
+    }
+
     &.error {
-        border-color: $error-color;
+        border-color: $error-color !important;
     }
 }
 
@@ -64,7 +69,8 @@ input {
     width: 100%;
     min-height: $default-height;
     transition: min-height $transition-lapse,
-                background $transition-lapse;
+                background $transition-lapse,
+                border-color $transition-lapse;
 
     label {
         opacity: $fib-9 * 1%;

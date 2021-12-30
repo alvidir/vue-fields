@@ -112,6 +112,10 @@ export default defineComponent({
     }
   }
 
+  &.active .border-line {
+    border-color: $default-color;
+  }
+
   &:not(.active).large:not(:focus-within) {
     label {
       line-height: $active-height !important;
