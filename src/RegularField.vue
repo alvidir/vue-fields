@@ -17,7 +17,7 @@
       </button>
     </div>
     <div class="error-container"
-         v-if="hasError">
+         :class="{hidden: !error}">
       <slot name="error" :error="error">
         <span>{{error}}</span>
       </slot>

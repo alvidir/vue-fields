@@ -7,7 +7,7 @@ $active-height: $fib-9 * 1px !default;
 $small-font-size: $fib-6 * 1px !default;
 $default-color: find-fib-color(success);
 $error-color: find-fib-color(error);
-$unactive-color: find-fib-color(disabled);
+$unactive-color: darken(find-fib-color(disabled), $fib-6 * 1%);
 $margin-bounds: $fib-6 * 1px;
 
 a {
@@ -82,6 +82,13 @@ input {
 .error-container {
     padding-bottom: $margin-bounds;
     color: $error-color;
+    transition: opacity $transition-lapse,
+                transform $transition-lapse;
+
+    &.hidden {
+        opacity: 0% !important;
+        transform: translateY($fib-8 * -1%);
+    }
     
     span {
       font-size: $small-font-size;

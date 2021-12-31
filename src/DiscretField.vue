@@ -15,7 +15,8 @@
             :type="type"
             @input="onItemChange(index)"/>
     </div>
-    <div class="error-container">
+    <div class="error-container"
+         :class="{hidden: !error}">
       <slot name="error" :error="error">
         <span>{{error}}</span>
       </slot>
