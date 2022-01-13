@@ -99,6 +99,8 @@ export default defineComponent({
 @import "global.scss";
 
 .discret-field {
+  width: fit-content;
+  
   label {
     height: $default-height;
     line-height: $default-height;
