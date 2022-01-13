@@ -2,7 +2,7 @@
   <div class="regular-field"
       :class="{active: value.length, large: large}">
     <div class="input-container"
-        :class="{error: hasError}">
+        :class="{error: hasError, large: large}">
       <slot>
         <label v-if="placeholder"
                @click="focus"> {{placeholder}} </label>
@@ -10,11 +10,11 @@
                v-model="value"
                :type="inputType"
                @input="onChange"/>
+        <button :class="{active: showButton}"
+                @click="switchVisibility">
+          {{ visible? '&#10033;' : 'Aa'}}
+        </button>
       </slot>
-      <button :class="{active: showButton}"
-              @click="switchVisibility">
-        {{ visible? '&#10033;' : 'Aa'}}
-      </button>
     </div>
     <div class="error-container"
          :class="{hidden: !error}">
@@ -95,7 +95,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import "global.scss";
+@import "./global.scss";
 
 .regular-field {
   height: fit-value;
@@ -123,6 +123,7 @@ export default defineComponent({
 
   .input-container {
     position: relative;
+    display: flex;
 
     label, input {
       height: $default-height;
@@ -138,15 +139,26 @@ export default defineComponent({
     input {
       width: 100%;
       margin-top: auto;
+      flex: 1;
     }
 
     button {
-      min-width: $active-height !important;
+      min-width: $active-height;
+      height: $default-height;
+      color: $default-color;
+      background: transparent;
+      text-align: center;
       font-size: 1rem;
+      border: none;
+      padding: 0px;
       opacity: 0%;
-      
+
+      transition: height $transition-lapse,
+                  opacity $transition-lapse;
+
       &:hover {
-        font-weight: 800;
+          cursor: pointer;
+          font-weight: 800;
       }
 
       &.active {

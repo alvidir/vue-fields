@@ -10,47 +10,17 @@ $error-color: find-fib-color(error);
 $unactive-color: darken(find-fib-color(disabled), $fib-6 * 1%);
 $margin-bounds: $fib-6 * 1px;
 
-a {
-    text-decoration: none;
-}
-
-button {
-    width: fit-content;
-    height: $default-height;
-    color: $default-color;
-    background: transparent;
-    border: none;
-    padding: 0px;
-
-    transition: height $transition-lapse,
-                opacity $transition-lapse;
-
-    &:hover {
-        cursor: pointer;
-    }
-}
-
-input {
-    height: 100%;
-    width: 100%;
-    background: transparent;
-    outline: none;
-    border: none;
-    font-size: 1em;
-    z-index: 1;
-}
-
 .active, .large {
-    min-height: $active-height;
+    min-height: $active-height !important;
 
     button {
-        height: $active-height;
+        height: $active-height !important;
     }
 }
 
 .border-line {
     @extend .round-corners, .fib-5;
-    border: $fib-2 * 1px solid;
+    border: $fib-1 * 1px solid;
     border-color: $default-color;
 
     &:not(:focus-within) {
@@ -66,7 +36,7 @@ input {
     @extend .border-line;
 
     display: flex;
-    width: 100%;
+    max-width: 100%;
     min-height: $default-height;
     transition: min-height $transition-lapse,
                 background $transition-lapse,
@@ -76,6 +46,16 @@ input {
         opacity: $fib-9 * 1%;
         transition: font-size $transition-lapse,
                     line-height $transition-lapse;
+    }
+
+    input {
+        height: 100%;
+        width: 100%;
+        background: transparent;
+        outline: none;
+        border: none;
+        font-size: 1em;
+        z-index: 1;
     }
 }
 

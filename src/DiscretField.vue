@@ -3,17 +3,19 @@
     <label v-if="placeholder"
           @click="focus"> {{placeholder}} </label>
     <div class="inputs-container">
+      <slot>
       <input maxlength="1" 
-             ref="entry"
-             v-for="(item, index) in value"
-             v-model="value[index]"
+            ref="entry"
+            v-for="(item, index) in value"
+            v-model="value[index]"
             :key="index"
             :class="{active: value[index],
-                     large: large,
-                     final: index == length-1,
-                     error: hasError}"
+                    large: large,
+                    final: index == length-1,
+                    error: hasError}"
             :type="type"
             @input="onItemChange(index)"/>
+      </slot>
     </div>
     <div class="error-container"
          :class="{hidden: !error}">
@@ -112,6 +114,7 @@ export default defineComponent({
 
     input {
       @extend .border-line;
+
       max-width: $default-height;
       min-height: $default-height;
       line-height: $default-height;
