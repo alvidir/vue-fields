@@ -32,6 +32,15 @@ $margin-bounds: $fib-6 * 1px;
     }
 }
 
+input.transparent {
+    height: 100%;
+    background: transparent;
+    outline: none;
+    border: none;
+    font-size: 1em;
+    z-index: 1;
+}
+
 .input-container {
     @extend .border-line;
 
@@ -49,13 +58,7 @@ $margin-bounds: $fib-6 * 1px;
     }
 
     input {
-        height: 100%;
-        width: 100%;
-        background: transparent;
-        outline: none;
-        border: none;
-        font-size: 1em;
-        z-index: 1;
+        @extend .transparent;
     }
 }
 
@@ -64,11 +67,6 @@ $margin-bounds: $fib-6 * 1px;
     color: $error-color;
     transition: opacity $transition-lapse,
                 transform $transition-lapse;
-
-    &.hidden {
-        opacity: 0% !important;
-        transform: translateY($fib-8 * -1%);
-    }
     
     span {
       font-size: $small-font-size;

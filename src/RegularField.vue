@@ -10,14 +10,14 @@
                v-model="value"
                :type="inputType"
                @input="onChange"/>
-        <button :class="{active: showButton}"
+        <button v-if="showButton"
                 @click="switchVisibility">
           {{ visible? '&#10033;' : 'Aa'}}
         </button>
       </slot>
     </div>
     <div class="error-container"
-         :class="{hidden: !error}">
+         v-if="error">
       <slot name="error" :error="error">
         <span>{{error}}</span>
       </slot>
@@ -136,8 +136,7 @@ export default defineComponent({
       cursor:text;
     }
 
-    input {
-      width: 100%;
+    input {  
       margin-top: auto;
       flex: 1;
     }
@@ -151,18 +150,13 @@ export default defineComponent({
       font-size: 1rem;
       border: none;
       padding: 0px;
-      opacity: 0%;
 
       transition: height $transition-lapse,
-                  opacity $transition-lapse;
+                  color $transition-lapse;
 
       &:hover {
           cursor: pointer;
           font-weight: 800;
-      }
-
-      &.active {
-        opacity: 100%;
       }
     }
 

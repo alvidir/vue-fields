@@ -1,11 +1,13 @@
 <template>
-  <div class="discret-field">
+  <div class="discret-field"
+      :class="{active: size}">
     <label v-if="placeholder"
           @click="focus"> {{placeholder}} </label>
     <div class="inputs-container">
       <slot>
       <input maxlength="1" 
             ref="entry"
+            class="transparent"
             v-for="(item, index) in value"
             v-model="value[index]"
             :key="index"
@@ -18,7 +20,7 @@
       </slot>
     </div>
     <div class="error-container"
-         :class="{hidden: !error}">
+         v-if="error">
       <slot name="error" :error="error">
         <span>{{error}}</span>
       </slot>
@@ -127,11 +129,8 @@ export default defineComponent({
         margin-right: $margin-bounds;
       }
 
-      &.active {
+      &.active, &:focus, &:focus-within {
         border-color: $default-color;
-      }
-
-      &.active, &:focus-within {
         min-height: $active-height;
       }
 
