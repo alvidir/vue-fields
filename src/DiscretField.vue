@@ -81,8 +81,10 @@ export default defineComponent({
 
   methods: { 
     onItemChange(index: number) {
+      let value = this.value.join('')
+      this.$emit(INPUT_EVENT_NAME, value)
+      
       if (this.size == this.length) {
-        let value = this.value.join('')
         this.$emit(COMPLETE_EVENT_NAME, value)
       }
 

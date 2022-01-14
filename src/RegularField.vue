@@ -45,6 +45,7 @@ export default defineComponent({
     placeholder: String,
     error: String,
     large: Boolean,
+    notShow: Boolean,
     type: {
       type: String,
       default: TEXT_INPUT_TYPE,
@@ -64,7 +65,7 @@ export default defineComponent({
     },
 
     showButton(): boolean {
-      return this.type == PASSWORD_INPUT_TYPE && this.value.length > 0
+      return !this.notShow && this.type == PASSWORD_INPUT_TYPE && this.value.length > 0
     },
 
     inputType(): string {

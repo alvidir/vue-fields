@@ -27,6 +27,10 @@ $margin-bounds: $fib-6 * 1px;
         border-color: $unactive-color;
     }
 
+    &:focus-within {
+        border: $fib-2 * 1px solid;
+    }
+
     &.error {
         border-color: $error-color !important;
     }
