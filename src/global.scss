@@ -10,14 +10,16 @@ $error-color: find-fib-color(error);
 $unactive-color: darken(find-fib-color(disabled), $fib-6 * 1%);
 $margin-bounds: $fib-6 * 1px;
 
-.active, .large {
-    min-height: $active-height !important;
-
-    button {
-        height: $active-height !important;
+.regular-field, .discret-field {
+    .active, .large {
+        min-height: $active-height !important;
+    
+        button {
+            height: $active-height !important;
+        }
     }
 }
-
+    
 .border-line {
     @extend .round-corners, .fib-5;
     border: $fib-1 * 1px solid;
@@ -67,13 +69,13 @@ input.transparent {
 }
 
 .error-container {
-    padding-bottom: $margin-bounds;
     color: $error-color;
+    padding-bottom: $margin-bounds;
     transition: opacity $transition-lapse,
                 transform $transition-lapse;
     
     span {
-      font-size: $small-font-size;
-      font-weight: 600;
+        font-size: $small-font-size;
+        font-weight: 600;
     }
 }

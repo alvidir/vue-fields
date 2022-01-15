@@ -8,6 +8,7 @@
                @click="focus"> {{placeholder}} </label>
         <input ref="entry"
                v-model="value"
+               :maxlength="maxlength"
                :type="inputType"
                @input="onChange"/>
         <button v-if="showButton"
@@ -46,6 +47,10 @@ export default defineComponent({
     error: String,
     large: Boolean,
     notShow: Boolean,
+    maxlength: {
+      type: Number,
+      default: 255,
+    },
     type: {
       type: String,
       default: TEXT_INPUT_TYPE,
