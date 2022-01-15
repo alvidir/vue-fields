@@ -105,15 +105,12 @@ export default defineComponent({
   &:focus-within, &.active {
     .input-container {
       @extend .active;
+      border-color: $default-color;
     }
 
     label {
       font-size: $small-font-size;
     }
-  }
-
-  &.active .border-line {
-    border-color: $default-color;
   }
 
   &:not(.active).large:not(:focus-within) {

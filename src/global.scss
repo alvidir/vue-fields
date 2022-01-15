@@ -21,7 +21,6 @@ $margin-bounds: $fib-6 * 1px;
 .border-line {
     @extend .round-corners, .fib-5;
     border: $fib-1 * 1px solid;
-    border-color: $default-color;
 
     &:not(:focus-within) {
         border-color: $unactive-color;
@@ -29,6 +28,7 @@ $margin-bounds: $fib-6 * 1px;
 
     &:focus-within {
         border: $fib-2 * 1px solid;
+        border-color: $default-color;
     }
 
     &.error {
