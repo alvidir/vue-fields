@@ -12,6 +12,7 @@
                :type="inputType"
                @input="onChange"/>
         <button v-if="showButton"
+                tabindex="-1"
                 @click="switchVisibility">
           {{ visible? '&#10033;' : 'Aa'}}
         </button>
