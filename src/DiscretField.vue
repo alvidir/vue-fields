@@ -100,16 +100,18 @@ export default defineComponent({
 @import "global.scss";
 
 .discret-field {
-  width: fit-content;
+  width: 100%;
   
   label {
     height: $default-height;
     line-height: $default-height;
-    transition: font-size $transition-lapse;
+    transition: font-size $transition-lapse,
+                opacity $transition-lapse;
   }
 
   &.active label, &:focus-within label {
     font-size: $small-font-size;
+    opacity: $fib-9 * 1%;
   }
 
   .inputs-container {
@@ -120,7 +122,7 @@ export default defineComponent({
     input {
       @extend .border-line;
 
-      max-width: $default-height;
+      width: 100%;
       min-height: $default-height;
       line-height: $default-height;
       text-align: center;
@@ -133,12 +135,12 @@ export default defineComponent({
       }
 
       &.active, &:focus, &:focus-within {
-        border-color: $default-color;
+        border-color: var(--color-green);
         min-height: $active-height;
       }
 
       &.error {
-        color: $error-color;
+        color: var(--color-red);
       }
     }
   }

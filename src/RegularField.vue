@@ -111,7 +111,7 @@ export default defineComponent({
   &:focus-within, &.active {
     .input-container {
       @extend .active;
-      border-color: $default-color;
+      border-color: var(--color-green);
     }
 
     label {
@@ -130,7 +130,7 @@ export default defineComponent({
     display: flex;
 
     label, input {
-      height: $default-height;
+      height: $default-height !important;
       line-height: $default-height;
       padding-left: $margin-bounds;
     }
@@ -148,7 +148,7 @@ export default defineComponent({
     button {
       min-width: $active-height;
       height: $default-height;
-      color: $default-color;
+      color: var(--color-green);
       background: transparent;
       text-align: center;
       font-size: 1rem;
@@ -166,13 +166,9 @@ export default defineComponent({
 
     &.error {
       button, input {
-        color: $error-color;
+        color: var(--color-red);
       }
     }
-  }
-
-  .error-container {
-    padding-left: $margin-bounds;
   }
 }
 
