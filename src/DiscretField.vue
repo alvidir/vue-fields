@@ -111,7 +111,7 @@ export default defineComponent({
 
   &.active label, &:focus-within label {
     font-size: $small-font-size;
-    opacity: $fib-9 * 1%;
+    color: var(--color-secondary-text);
   }
 
   .inputs-container {

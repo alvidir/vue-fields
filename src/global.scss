@@ -29,7 +29,7 @@ $margin-bounds: $fib-6 * 1px;
     background: var(--color-background-primary);
 
     &:not(:focus-within) {
-        border-color: var(--color-secondary-text);
+        border-color: var(--color-text-disabled);
     }
 
     &:focus-within {
@@ -62,7 +62,7 @@ input.transparent {
                 border-color $transition-lapse;
 
     label {
-        opacity: $fib-9 * 1%;
+        color: var(--color-secondary-text);
         transition: font-size $transition-lapse,
                     line-height $transition-lapse;
     }
