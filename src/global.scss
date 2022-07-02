@@ -19,6 +19,7 @@ $margin-bounds: $fib-6 * 1px;
     color: var(--color-text);
     
     input {
+        transition: height $transition-lapse;
         color: var(--color-text);
     }
 }

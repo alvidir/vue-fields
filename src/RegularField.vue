@@ -123,6 +123,10 @@ export default defineComponent({
     label {
       line-height: $active-height !important;
     }
+
+    input {
+      height: $active-height !important;
+    }
   }
 
   .input-container {
@@ -130,7 +134,7 @@ export default defineComponent({
     display: flex;
 
     label, input {
-      height: $default-height !important;
+      height: $default-height;
       line-height: $default-height;
       padding-left: $margin-bounds;
     }

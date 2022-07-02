@@ -4,7 +4,7 @@
       <regular-field @input="onRegularFieldChange"
                     :error="regularFieldError"
                     :placeholder="'Write something here'"
-                    :large="true"
+                    :large="false"
                     :readonly="readonly"
                     :type="'password'">
       </regular-field>
@@ -50,7 +50,7 @@ export default defineComponent({
 @import "fibonacci-styles";
 
 * {
-  @extend .theme-dark;
+  @extend .theme-light;
 
   margin: 0;
   padding: 0;
