@@ -2,7 +2,8 @@
   <div class="regular-field"
       :class="{active: value.length, large: large}">
     <div class="input-container"
-        :class="{error: hasError, large: large}">
+        :class="{error: hasError, large: large}"
+        @click="focus()">
       <slot>
         <label v-if="placeholder"
                @click="focus"> {{placeholder}} </label>
@@ -132,6 +133,7 @@ export default defineComponent({
   .input-container {
     position: relative;
     display: flex;
+    cursor: text;
 
     label, input {
       height: $default-height;
