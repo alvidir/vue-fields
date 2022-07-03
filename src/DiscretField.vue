@@ -1,8 +1,7 @@
 <template>
   <div class="discret-field"
       :class="{active: size}">
-    <label v-if="placeholder"
-          @click="focus"> {{placeholder}} </label>
+    <label v-if="placeholder"> {{placeholder}} </label>
     <div class="inputs-container">
       <slot>
       <input maxlength="1" 
