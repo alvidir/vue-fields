@@ -7,7 +7,7 @@ $active-height: $fib-9 * 1px;
 $small-font-size: $fib-6 * 1px;
 $margin-bounds: $fib-6 * 1px;
 
-.regular-field, .discret-field {
+.regular-field, .discret-field, .search-field {
     .active, .large {
         min-height: $active-height !important;
     
@@ -35,6 +35,10 @@ $margin-bounds: $fib-6 * 1px;
 
     &:focus-within {
         outline: $fib-2 * 1px solid;
+        outline-color: var(--color-green);
+    }
+
+    &.active {
         outline-color: var(--color-green);
     }
 

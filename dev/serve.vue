@@ -4,7 +4,7 @@
       <regular-field @input="onRegularFieldChange"
                     :error="regularFieldError"
                     :placeholder="'Write something here'"
-                    :large="false"
+                    :large="true"
                     :readonly="readonly"
                     :type="'password'">
       </regular-field>
@@ -16,6 +16,15 @@
                     :large="true"
                     :readonly="readonly">
       </discret-field>
+    </div>
+        <div class="demo-item">
+      <search-field @complete="onDiscretFieldComplete"
+                    :error="discretFieldError"
+                    :placeholder="'Search'"
+                    :large="false"
+                    :readonly="readonly"
+                    @click="onClick">
+      </search-field>
     </div>
   </div>
 </template>
@@ -42,6 +51,10 @@ export default defineComponent({
     onDiscretFieldComplete(value: string) {
       this.discretFieldError = value !== 'scipio'? "Incorrect input" : ""
     },
+
+    onClick(value: string) {
+      console.log("search: ", value)
+    }
   }
 });
 </script>
