@@ -3,7 +3,6 @@
       :class="{active: size}">
     <label v-if="placeholder"> {{placeholder}} </label>
     <div class="inputs-container">
-      <slot>
       <input maxlength="1" 
             ref="entry"
             class="transparent"
@@ -16,7 +15,6 @@
                     error: hasError}"
             :type="type"
             @input="onItemChange(index)"/>
-      </slot>
     </div>
     <div class="error-container"
          v-if="error">

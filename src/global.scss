@@ -35,10 +35,9 @@ $margin-bounds: $fib-6 * 1px;
 
     &:focus-within {
         outline: $fib-2 * 1px solid;
-        outline-color: var(--color-green);
     }
 
-    &.active {
+    &:focus-within, &.active {
         outline-color: var(--color-green);
     }
 

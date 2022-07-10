@@ -4,20 +4,18 @@
     <div class="input-container"
         :class="{error: hasError, large: large}"
         @click="focus()">
-      <slot>
-        <label v-if="placeholder"
-               @click="focus"> {{placeholder}} </label>
-        <input ref="entry"
-               v-model="value"
-               :maxlength="maxlength"
-               :type="inputType"
-               @input="onChange"/>
-        <button v-if="showButton"
-                tabindex="-1"
-                @click="switchVisibility">
-          {{ visible? '&#10033;' : 'Aa'}}
-        </button>
-      </slot>
+      <label v-if="placeholder"
+              @click="focus"> {{placeholder}} </label>
+      <input ref="entry"
+              v-model="value"
+              :maxlength="maxlength"
+              :type="inputType"
+              @input="onChange"/>
+      <button v-if="showButton"
+              tabindex="-1"
+              @click="switchVisibility">
+        {{ visible? '&#10033;' : 'Aa'}}
+      </button>
     </div>
     <div class="error-container"
          v-if="error">
