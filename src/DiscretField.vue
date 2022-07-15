@@ -86,7 +86,7 @@ export default defineComponent({
       }
 
       let next = this.value[index].length? ++index : --index
-      let entryRef: any = this.$refs['entry']
+      let entryRef = this.$refs['entry'] as HTMLInputElement[]
       entryRef[next]?.focus()
     }
   },

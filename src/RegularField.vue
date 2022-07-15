@@ -83,7 +83,7 @@ export default defineComponent({
 
   methods: { 
     focus() {
-      let entryRef: any = this.$refs.entry
+      let entryRef = this.$refs.entry as HTMLInputElement
       entryRef.focus()
     },
 

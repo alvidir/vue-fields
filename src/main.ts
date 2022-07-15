@@ -1,3 +1,4 @@
+/* eslint-disable */
 import RegularField from "./RegularField.vue"
 import DiscretField from "./DiscretField.vue"
 import SearchField from "./SearchField.vue"
