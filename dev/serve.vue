@@ -1,29 +1,25 @@
 <template>
   <div id="app">
     <div class="demo-item">
-      <regular-field @input="onRegularFieldChange"
-                    :error="regularFieldError"
-                    :placeholder="'Write something here'"
-                    :large="true"
-                    :readonly="readonly"
-                    :type="'password'">
+      <regular-field :error="regularFieldError"
+                     :placeholder="'Write something here'"
+                     :large="true"
+                     :readonly="readonly"
+                     :type="'password'"
+                     @input="onRegularFieldChange">
       </regular-field>
     </div>
     <div class="demo-item">
-      <discret-field @complete="onDiscretFieldComplete"
-                    :error="discretFieldError"
-                    :placeholder="'Welcome to Cartago'"
-                    :large="true"
-                    :readonly="readonly">
+      <discret-field :error="discretFieldError"
+                     :placeholder="'Welcome to Cartago'"
+                     :large="true"
+                     :readonly="readonly"
+                     @complete="onDiscretFieldComplete">
       </discret-field>
     </div>
         <div class="demo-item">
-      <search-field @complete="onDiscretFieldComplete"
-                    :error="discretFieldError"
-                    :placeholder="'Search'"
+      <search-field :placeholder="'Search'"
                     :large="false"
-                    :readonly="readonly"
-                    :loading="false"
                     :items="searchItems"
                     @click="onClick"
                     @input="onChange"
