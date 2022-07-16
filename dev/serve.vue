@@ -24,7 +24,10 @@
                     :large="false"
                     :readonly="readonly"
                     :loading="false"
-                    @click="onClick">
+                    :items="searchItems"
+                    @click="onClick"
+                    @input="onChange"
+                    @select="onSelect">
         <div>Hello world</div>
       </search-field>
     </div>
@@ -33,6 +36,7 @@
 
 <script lang="ts">
 import { defineComponent } from 'vue';
+import { Item } from '@/SearchField.vue';
 
 export default defineComponent({
   name: 'ServeDev',
@@ -42,6 +46,7 @@ export default defineComponent({
       large: true,
       regularFieldError: "",
       discretFieldError: "",
+      searchItems: Array<Item>(),
     }
   },
 
@@ -55,7 +60,22 @@ export default defineComponent({
     },
 
     onClick(value: string) {
-      console.log("search: ", value)
+      console.log("search click: ", value)
+    },
+
+    onChange(value: string) {
+      console.log("search change: ", value)
+      this.searchItems.splice(0, this.searchItems.length)
+      for (var i = 0; i < value.length; i++) {
+        this.searchItems.push({
+          title: value.substring(0, value.length-i),
+          id: i,
+        })
+      }
+    },
+
+    onSelect(selected: number) {
+      console.log("selected: ", this.searchItems[selected].title)
     }
   }
 });
@@ -82,7 +102,6 @@ body {
   position: relative;
   min-height: 100vh;
   width: 100%;
-
   background: var(--color-background-secondary);
 }
 

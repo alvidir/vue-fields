@@ -11,7 +11,7 @@
               :maxlength="maxlength"
               @input="onChange"/>
       <button tabindex="-1"
-              @click="onSearchClick">
+              @click="onSearch">
         <svg x="0px" y="0px" viewBox="0 0 487.95 487.95" fill="var(--color-text)">
           <path d="M481.8,453l-140-140.1c27.6-33.1,44.2-75.4,44.2-121.6C386,85.9,299.5,0.2,193.1,0.2S0,86,0,191.4s86.5,191.1,192.9,191.1
           c45.2,0,86.8-15.5,119.8-41.4l140.5,140.5c8.2,8.2,20.4,8.2,28.6,0C490,473.4,490,461.2,481.8,453z M41,191.4
@@ -20,16 +20,20 @@
       </button>
     </div>
     <div class="items-container">
-      <label v-if="!items">&#11835;</label>
-      <div v-else>
-        
+      <div class="scrollable-list" :class="{sized: maxheight}">
+        <label v-if="!items || !items.length">&#11835;</label>
+        <button v-else v-for="item in items" :key="item.id"
+                class="item"
+                @click="onSelect(item.id)">
+          <label>{{item.title}}</label>
+        </button>
       </div>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent, PropType } from "vue"
 import {
   INPUT_EVENT_NAME,
   CLICK_EVENT_NAME,
@@ -37,7 +41,7 @@ import {
 } from "./constants"
 
 export interface Item {
-  id: string,
+  id: number,
   title: string,
 }
 
@@ -54,7 +58,11 @@ export default defineComponent({
   props: {
     placeholder: String,
     large: Boolean,
-    items: Array,
+    items: Array as PropType<Array<Item>>,
+    maxheight: {
+      type: String,
+      default: '30vh',
+    },
     maxlength: {
       type: Number,
       default: 255,
@@ -73,7 +81,7 @@ export default defineComponent({
       entryRef.focus()
     },
 
-    onSearchClick() {
+    onSearch() {
       if (this.value.length) {
         this.$emit(CLICK_EVENT_NAME, this.value)
       }
@@ -81,6 +89,10 @@ export default defineComponent({
 
     onChange() {
       this.$emit(INPUT_EVENT_NAME, this.value)
+    },
+
+    onSelect(selected: number) {
+      this.$emit(SELECT_EVENT_NAME, selected)
     }
   },
 
@@ -103,8 +115,6 @@ export default defineComponent({
 
 .items-container {
   @extend .round-corners, .fib-6;
-  display: flex;
-  justify-content: center;
   position: absolute;
   visibility: hidden;
   width: 100%;
@@ -113,6 +123,65 @@ export default defineComponent({
   padding-top: $active-height + $fib-6 * 1px;
   padding-bottom: $fib-5 * 1px;
   transform: translateY(100%);
+
+  .scrollable-list {
+    display: flex;
+    flex-direction: column;
+    overflow-y: auto;
+
+    &.sized {
+      max-height: v-bind(maxheight);
+    }
+
+    /* width */
+    &::-webkit-scrollbar {
+      width: $fib-4 * 1px;
+    }
+
+    /* Track */
+    &::-webkit-scrollbar-track {
+      background: none; 
+    }
+    
+    /* Handle */
+    &::-webkit-scrollbar-thumb {
+      @extend .round-corners, .fib-5;
+      background: var(--color-scrollbar); 
+    }
+
+    /* Handle on hover */
+    &::-webkit-scrollbar-thumb:hover {
+      background: var(--color-scrollbar-hover); 
+    }
+  }
+
+  label {
+    width: fit-content;
+    margin-right: auto;
+    margin-left: auto;
+  }
+
+  button.item {
+    @extend .round-corners, .fib-4;
+    margin-left: $fib-4 * 1px;
+    margin-right: $fib-4 * 1px;
+    padding: $fib-4 * 1px;
+    padding-top: $fib-6 * 1px;
+    padding-bottom: $fib-6 * 1px;
+    text-align: start;
+    background: none;
+    border: none;
+
+    label {
+      font-size: 1rem;
+      margin-left: $fib-5 * 1px;
+      color: var(--color-text);
+    }
+
+    &:hover:not(:active) {
+      background: var(--color-background-disabled);
+    }
+  }
 }
 
 .search-field {
