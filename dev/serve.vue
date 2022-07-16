@@ -24,7 +24,6 @@
                     @click="onClick"
                     @input="onChange"
                     @select="onSelect">
-        <div>Hello world</div>
       </search-field>
     </div>
   </div>
