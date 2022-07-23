@@ -41,7 +41,7 @@ import {
 } from "./constants"
 
 export interface Item {
-  id: number,
+  id: string,
   title: string,
 }
 
@@ -91,7 +91,7 @@ export default defineComponent({
       this.$emit(INPUT_EVENT_NAME, this.value)
     },
 
-    onSelect(selected: number) {
+    onSelect(selected: string) {
       this.$emit(SELECT_EVENT_NAME, selected)
     }
   },

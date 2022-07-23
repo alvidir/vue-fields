@@ -64,13 +64,13 @@ export default defineComponent({
       for (var i = 0; i < value.length; i++) {
         this.searchItems.push({
           title: value.substring(0, value.length-i),
-          id: i,
+          id: i.toString(),
         })
       }
     },
 
-    onSelect(selected: number) {
-      console.log("selected: ", this.searchItems[selected].title)
+    onSelect(selected: string) {
+      console.log("selected: ", this.searchItems[+selected].title)
     }
   }
 });
