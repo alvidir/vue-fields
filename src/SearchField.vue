@@ -136,6 +136,7 @@ export default defineComponent({
     /* width */
     &::-webkit-scrollbar {
       width: $fib-4 * 1px;
+      height: $fib-4 * 1px;
     }
 
     /* Track */
