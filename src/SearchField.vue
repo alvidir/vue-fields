@@ -173,7 +173,7 @@ export default defineComponent({
     border: none;
 
     &:hover:not(:active) {
-      background: var(--color-background-disabled);
+      background: var(--color-background-highlight);
     }
   }
 }
