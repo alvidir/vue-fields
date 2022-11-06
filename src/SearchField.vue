@@ -28,10 +28,10 @@
         <label v-if="!items || !items.length">&#11835;</label>
         <button
           v-else
-          v-for="item in items"
-          :key="item.id"
+          v-for="(item, index) in items"
+          :key="index"
           class="item"
-          @click="onSelect(item.id)"
+          @click="onSelect(item)"
         >
           <slot :item="item"> </slot>
         </button>
@@ -47,11 +47,6 @@ import {
   CLICK_EVENT_NAME,
   SELECT_EVENT_NAME,
 } from "./constants";
-
-export interface Item {
-  id: string;
-  title: string;
-}
 
 export default defineComponent({
   name: "SearchField",
@@ -253,7 +248,6 @@ export default defineComponent({
       transition: height $transition-lapse, color $transition-lapse;
 
       &:hover {
-        cursor: pointer;
         font-weight: 800;
       }
     }
