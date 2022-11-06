@@ -1,47 +1,44 @@
 <template>
-  <div class="regular-field"
-      :class="{active: value.length, large: large}">
-    <div class="input-container"
-        :class="{error: hasError, large: large}"
-        @click="focus()">
-      <label v-if="placeholder"
-              @click="focus"> {{placeholder}} </label>
-      <input ref="entry"
-              v-model="value"
-              :maxlength="maxlength"
-              :type="inputType"
-              @input="onChange"/>
-      <button v-if="showButton"
-              tabindex="-1"
-              @click="switchVisibility">
-        {{ visible? '&#10033;' : 'Aa'}}
+  <div class="regular-field" :class="{ active: value.length, large: large }">
+    <div
+      class="input-container"
+      :class="{ error: hasError, large: large }"
+      @click="focus()"
+    >
+      <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
+      <input
+        ref="entry"
+        v-model="value"
+        :maxlength="maxlength"
+        :type="inputType"
+        @input="onChange"
+      />
+      <button v-if="showButton" tabindex="-1" @click="switchVisibility">
+        {{ visible ? "&#10033;" : "Aa" }}
       </button>
     </div>
-    <div class="error-container"
-         v-if="error">
+    <div class="error-container" v-if="error">
       <slot name="error" :error="error">
-        <span>{{error}}</span>
+        <span>{{ error }}</span>
       </slot>
     </div>
   </div>
 </template>
 
 <script lang="ts">
-import { defineComponent } from "vue"
+import { defineComponent } from "vue";
 import {
   INPUT_EVENT_NAME,
   PASSWORD_INPUT_TYPE,
   TEXT_INPUT_TYPE,
-} from "./constants"
+} from "./constants";
 
 export default defineComponent({
   name: "RegularField",
   components: {},
 
-  emits: [
-    INPUT_EVENT_NAME,
-  ],
-  
+  emits: [INPUT_EVENT_NAME],
+
   props: {
     placeholder: String,
     error: String,
@@ -53,50 +50,49 @@ export default defineComponent({
     type: {
       type: String,
       default: TEXT_INPUT_TYPE,
-    }
+    },
   },
 
-  data () {
+  data() {
     return {
       value: "",
       visible: false,
-    }
+    };
   },
 
   computed: {
     hasError(): boolean {
-      return this.error != undefined && this.error.length > 0
+      return this.error != undefined && this.error.length > 0;
     },
 
     showButton(): boolean {
-      return this.type == PASSWORD_INPUT_TYPE && this.value.length > 0
+      return this.type == PASSWORD_INPUT_TYPE && this.value.length > 0;
     },
 
     inputType(): string {
       if (this.type === PASSWORD_INPUT_TYPE && !this.visible) {
-        return PASSWORD_INPUT_TYPE
+        return PASSWORD_INPUT_TYPE;
       } else {
-        return TEXT_INPUT_TYPE
+        return TEXT_INPUT_TYPE;
       }
     },
   },
 
-  methods: { 
+  methods: {
     focus() {
-      let entryRef = this.$refs.entry as HTMLInputElement
-      entryRef.focus()
+      let entryRef = this.$refs.entry as HTMLInputElement;
+      entryRef.focus();
     },
 
     switchVisibility() {
-      this.visible = !this.visible
+      this.visible = !this.visible;
     },
 
     onChange() {
-      this.$emit(INPUT_EVENT_NAME, this.value)
-    }
+      this.$emit(INPUT_EVENT_NAME, this.value);
+    },
   },
-
-})
+});
 </script>
 
 <style lang="scss">
@@ -105,7 +101,8 @@ export default defineComponent({
 .regular-field {
   width: 100%;
 
-  &:focus-within, &.active {
+  &:focus-within,
+  &.active {
     .input-container {
       @extend .active;
       border-color: var(--color-green);
@@ -131,7 +128,8 @@ export default defineComponent({
     display: flex;
     cursor: text;
 
-    label, input {
+    label,
+    input {
       height: $default-height;
       line-height: $default-height;
       padding-left: $margin-bounds;
@@ -139,10 +137,10 @@ export default defineComponent({
 
     label {
       position: absolute;
-      cursor:text;
+      cursor: text;
     }
 
-    input {  
+    input {
       margin-top: auto;
       flex: 1;
     }
@@ -157,21 +155,20 @@ export default defineComponent({
       border: none;
       padding: 0px;
 
-      transition: height $transition-lapse,
-                  color $transition-lapse;
+      transition: height $transition-lapse, color $transition-lapse;
 
       &:hover {
-          cursor: pointer;
-          font-weight: 800;
+        cursor: pointer;
+        font-weight: 800;
       }
     }
 
     &.error {
-      button, input {
+      button,
+      input {
         color: var(--color-red);
       }
     }
   }
 }
-
 </style>

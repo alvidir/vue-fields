@@ -1,31 +1,39 @@
 <template>
-  <div class="search-field"
-      :class="{active: value.length, large: large}">
-    <div class="input-container"
-        :class="{large: large}"
-        @click="focus()">
-      <label v-if="placeholder"
-              @click="focus"> {{placeholder}} </label>
-      <input ref="entry"
-              v-model="value"
-              :maxlength="maxlength"
-              @input="onChange"/>
-      <button tabindex="-1"
-              @click="onSearch">
-        <svg x="0px" y="0px" viewBox="0 0 487.95 487.95" fill="var(--color-text)">
-          <path d="M481.8,453l-140-140.1c27.6-33.1,44.2-75.4,44.2-121.6C386,85.9,299.5,0.2,193.1,0.2S0,86,0,191.4s86.5,191.1,192.9,191.1
+  <div class="search-field" :class="{ active: value.length, large: large }">
+    <div class="input-container" :class="{ large: large }" @click="focus()">
+      <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
+      <input
+        ref="entry"
+        v-model="value"
+        :maxlength="maxlength"
+        @input="onChange"
+      />
+      <button tabindex="-1" @click="onSearch">
+        <svg
+          x="0px"
+          y="0px"
+          viewBox="0 0 487.95 487.95"
+          fill="var(--color-text)"
+        >
+          <path
+            d="M481.8,453l-140-140.1c27.6-33.1,44.2-75.4,44.2-121.6C386,85.9,299.5,0.2,193.1,0.2S0,86,0,191.4s86.5,191.1,192.9,191.1
           c45.2,0,86.8-15.5,119.8-41.4l140.5,140.5c8.2,8.2,20.4,8.2,28.6,0C490,473.4,490,461.2,481.8,453z M41,191.4
-          c0-82.8,68.2-150.1,151.9-150.1s151.9,67.3,151.9,150.1s-68.2,150.1-151.9,150.1S41,274.1,41,191.4z" />
+          c0-82.8,68.2-150.1,151.9-150.1s151.9,67.3,151.9,150.1s-68.2,150.1-151.9,150.1S41,274.1,41,191.4z"
+          />
         </svg>
       </button>
     </div>
     <div class="items-container">
-      <div class="scrollable-list" :class="{sized: maxheight}">
+      <div class="scrollable-list" :class="{ sized: maxheight }">
         <label v-if="!items || !items.length">&#11835;</label>
-        <button v-else v-for="item in items" :key="item.id"
-                class="item"
-                @click="onSelect(item.id)">
-          <label>{{item.title}}</label>
+        <button
+          v-else
+          v-for="item in items"
+          :key="item.id"
+          class="item"
+          @click="onSelect(item.id)"
+        >
+          <slot :item="item"> </slot>
         </button>
       </div>
     </div>
@@ -33,35 +41,31 @@
 </template>
 
 <script lang="ts">
-import { defineComponent, PropType } from "vue"
+import { defineComponent, PropType } from "vue";
 import {
   INPUT_EVENT_NAME,
   CLICK_EVENT_NAME,
   SELECT_EVENT_NAME,
-} from "./constants"
+} from "./constants";
 
 export interface Item {
-  id: string,
-  title: string,
+  id: string;
+  title: string;
 }
 
 export default defineComponent({
   name: "SearchField",
   components: {},
 
-  emits: [
-    INPUT_EVENT_NAME,
-    CLICK_EVENT_NAME,
-    SELECT_EVENT_NAME,
-  ],
-  
+  emits: [INPUT_EVENT_NAME, CLICK_EVENT_NAME, SELECT_EVENT_NAME],
+
   props: {
     placeholder: String,
     large: Boolean,
-    items: Array as PropType<Array<Item>>,
+    items: Array as PropType<Array<unknown>>,
     maxheight: {
       type: String,
-      default: '30vh',
+      default: "30vh",
     },
     maxlength: {
       type: Number,
@@ -69,34 +73,33 @@ export default defineComponent({
     },
   },
 
-  data () {
+  data() {
     return {
       value: "",
-    }
+    };
   },
 
-  methods: { 
+  methods: {
     focus() {
-      let entryRef = this.$refs.entry as HTMLInputElement
-      entryRef.focus()
+      let entryRef = this.$refs.entry as HTMLInputElement;
+      entryRef.focus();
     },
 
     onSearch() {
       if (this.value.length) {
-        this.$emit(CLICK_EVENT_NAME, this.value)
+        this.$emit(CLICK_EVENT_NAME, this.value);
       }
     },
 
     onChange() {
-      this.$emit(INPUT_EVENT_NAME, this.value)
+      this.$emit(INPUT_EVENT_NAME, this.value);
     },
 
     onSelect(selected: string) {
-      this.$emit(SELECT_EVENT_NAME, selected)
-    }
+      this.$emit(SELECT_EVENT_NAME, selected);
+    },
   },
-
-})
+});
 </script>
 
 <style scoped lang="scss">
@@ -108,7 +111,8 @@ export default defineComponent({
     outline: $fib-2 * 1px solid;
   }
 
-  &:focus-within, &.active {
+  &:focus-within,
+  &.active {
     outline-color: var(--color-accent);
   }
 }
@@ -141,18 +145,18 @@ export default defineComponent({
 
     /* Track */
     &::-webkit-scrollbar-track {
-      background: none; 
+      background: none;
     }
-    
+
     /* Handle */
     &::-webkit-scrollbar-thumb {
       @extend .round-corners, .fib-5;
-      background: var(--color-scrollbar); 
+      background: var(--color-scrollbar);
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
-      background: var(--color-scrollbar-hover); 
+      background: var(--color-scrollbar-hover);
     }
   }
 
@@ -173,12 +177,6 @@ export default defineComponent({
     background: none;
     border: none;
 
-    label {
-      font-size: 1rem;
-      margin-left: $fib-5 * 1px;
-      color: var(--color-text);
-    }
-
     &:hover:not(:active) {
       background: var(--color-background-disabled);
     }
@@ -195,7 +193,8 @@ export default defineComponent({
     visibility: visible;
   }
 
-  &:focus-within, &.active {
+  &:focus-within,
+  &.active {
     .input-container {
       @extend .active;
       border-color: var(--color-green);
@@ -223,7 +222,8 @@ export default defineComponent({
     margin: 5px;
     z-index: 2;
 
-    label, input {
+    label,
+    input {
       height: $default-height;
       line-height: $default-height;
       padding-left: $margin-bounds;
@@ -231,10 +231,10 @@ export default defineComponent({
 
     label {
       position: absolute;
-      cursor:text;
+      cursor: text;
     }
 
-    input {  
+    input {
       margin-top: auto;
       flex: 1;
     }
@@ -250,12 +250,11 @@ export default defineComponent({
       border: none;
       padding: 0;
 
-      transition: height $transition-lapse,
-                  color $transition-lapse;
+      transition: height $transition-lapse, color $transition-lapse;
 
       &:hover {
-          cursor: pointer;
-          font-weight: 800;
+        cursor: pointer;
+        font-weight: 800;
       }
     }
 
@@ -265,5 +264,4 @@ export default defineComponent({
     }
   }
 }
-
 </style>

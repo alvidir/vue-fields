@@ -7,84 +7,85 @@ $active-height: $fib-9 * 1px;
 $small-font-size: $fib-6 * 1px;
 $margin-bounds: $fib-6 * 1px;
 
-.regular-field, .discret-field, .search-field {
-    .active, .large {
-        min-height: $active-height !important;
-    
-        button {
-            height: $active-height !important;
-        }
-    }
+.regular-field,
+.discret-field,
+.search-field {
+  .active,
+  .large {
+    min-height: $active-height !important;
 
+    button {
+      height: $active-height !important;
+    }
+  }
+
+  color: var(--color-text);
+
+  input {
+    transition: height $transition-lapse;
     color: var(--color-text);
-    
-    input {
-        transition: height $transition-lapse;
-        color: var(--color-text);
-    }
+  }
 }
-    
+
 .border-line {
-    @extend .round-corners, .fib-5;
-    outline: $fib-1 * 1px solid;
-    background: var(--color-background-primary);
+  @extend .round-corners, .fib-5;
+  outline: $fib-1 * 1px solid;
+  background: var(--color-background-primary);
 
-    &:not(:focus-within) {
-        outline-color: var(--color-text-disabled);
-    }
+  &:not(:focus-within) {
+    outline-color: var(--color-text-disabled);
+  }
 
-    &:focus-within {
-        outline: $fib-2 * 1px solid;
-    }
+  &:focus-within {
+    outline: $fib-2 * 1px solid;
+  }
 
-    &:focus-within, &.active {
-        outline-color: var(--color-green);
-    }
+  &:focus-within,
+  &.active {
+    outline-color: var(--color-green);
+  }
 
-    &.error {
-        outline-color: var(--color-red) !important;
-    }
+  &.error {
+    outline-color: var(--color-red) !important;
+  }
 }
 
 input.transparent {
-    height: 100%;
-    background: transparent;
-    outline: none;
-    border: none;
-    font-size: 1em;
-    z-index: 1;
+  height: 100%;
+  background: transparent;
+  outline: none;
+  border: none;
+  font-size: 1em;
+  z-index: 1;
 }
 
 .input-container {
-    @extend .border-line;
+  @extend .border-line;
 
-    display: flex;
-    max-width: 100%;
-    min-height: $default-height;
-    transition: min-height $transition-lapse,
-                background $transition-lapse,
-                border-color $transition-lapse;
+  display: flex;
+  max-width: 100%;
+  min-height: $default-height;
+  transition: min-height $transition-lapse, background $transition-lapse,
+    border-color $transition-lapse;
 
-    label {
-        color: var(--color-secondary-text);
-        transition: font-size $transition-lapse,
-                    line-height $transition-lapse;
-    }
+  label {
+    color: var(--color-secondary-text);
+    transition: font-size $transition-lapse, line-height $transition-lapse;
+  }
 
-    input {
-        @extend .transparent;
-    }
+  input {
+    @extend .transparent;
+  }
 }
 
 .error-container {
-    color: var(--color-red);
-    padding-top: $fib-4 * 1px;
-    padding-bottom: $margin-bounds;
-    transition: opacity $transition-lapse,
-                transform $transition-lapse;
-    
-    span {
-        font-size: $small-font-size;
-        font-weight: 600;
-    }
+  color: var(--color-red);
+  padding-top: $fib-4 * 1px;
+  padding-bottom: $margin-bounds;
+  transition: opacity $transition-lapse, transform $transition-lapse;
+
+  span {
+    font-size: $small-font-size;
+    font-weight: 600;
+  }
 }
