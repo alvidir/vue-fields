@@ -186,6 +186,14 @@ export default defineComponent({
   &:focus-within .items-container,
   &:hover.active .items-container {
     visibility: visible;
+
+    $shift: $fib-1 * 1px;
+    $blur: $fib-5 * 1px;
+    $opacity: $fib-3 * 0.1;
+
+    -webkit-box-shadow: 0px $shift $blur 0px rgba(0, 0, 0, $opacity);
+    -moz-box-shadow: 0px $shift $blur 0px rgba(0, 0, 0, $opacity);
+    box-shadow: 0px $shift $blur 0px rgba(0, 0, 0, $opacity);
   }
 
   &:focus-within,
