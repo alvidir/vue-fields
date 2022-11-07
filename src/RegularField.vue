@@ -51,12 +51,14 @@ export default defineComponent({
       type: String,
       default: TEXT_INPUT_TYPE,
     },
+    debounce: Number,
   },
 
   data() {
     return {
       value: "",
       visible: false,
+      timeout: undefined as number | undefined,
     };
   },
 
@@ -89,7 +91,17 @@ export default defineComponent({
     },
 
     onChange() {
-      this.$emit(INPUT_EVENT_NAME, this.value);
+      const value = this.value;
+      if (!this.debounce) {
+        this.$emit(INPUT_EVENT_NAME, value);
+        return;
+      }
+
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(
+        () => this.$emit(INPUT_EVENT_NAME, value),
+        this.debounce
+      );
     },
   },
 });

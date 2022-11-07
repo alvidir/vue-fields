@@ -66,11 +66,13 @@ export default defineComponent({
       type: Number,
       default: 255,
     },
+    debounce: Number,
   },
 
   data() {
     return {
       value: "",
+      timeout: undefined as number | undefined,
     };
   },
 
@@ -87,7 +89,17 @@ export default defineComponent({
     },
 
     onChange() {
-      this.$emit(INPUT_EVENT_NAME, this.value);
+      const value = this.value;
+      if (!this.debounce) {
+        this.$emit(INPUT_EVENT_NAME, value);
+        return;
+      }
+
+      clearTimeout(this.timeout);
+      this.timeout = setTimeout(
+        () => this.$emit(INPUT_EVENT_NAME, value),
+        this.debounce
+      );
     },
 
     onSelect(selected: string) {
