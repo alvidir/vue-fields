@@ -158,7 +158,6 @@ export default defineComponent({
       transition: height $transition-lapse, color $transition-lapse;
 
       &:hover {
-        cursor: pointer;
         font-weight: 800;
       }
     }
