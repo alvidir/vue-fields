@@ -94,6 +94,7 @@ export default defineComponent({
 
 .discret-field {
   width: 100%;
+  z-index: 0;
 
   label {
     height: $default-height;
@@ -104,7 +105,7 @@ export default defineComponent({
   &.active label,
   &:focus-within label {
     font-size: $small-font-size;
-    color: var(--color-secondary-text);
+    color: var(--color-text-secondary);
   }
 
   .inputs-container {

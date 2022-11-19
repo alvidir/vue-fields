@@ -13,7 +13,7 @@
           x="0px"
           y="0px"
           viewBox="0 0 487.95 487.95"
-          fill="var(--color-text)"
+          fill="var(--color-text-primary)"
         >
           <path
             d="M481.8,453l-140-140.1c27.6-33.1,44.2-75.4,44.2-121.6C386,85.9,299.5,0.2,193.1,0.2S0,86,0,191.4s86.5,191.1,192.9,191.1
@@ -130,19 +130,19 @@ export default defineComponent({
   visibility: hidden;
   width: 100%;
   bottom: 100%;
-  background-color: var(--color-background-primary);
+  background-color: var(--color-bg-primary);
   padding-top: $active-height + $fib-6 * 1px;
   padding-bottom: $fib-5 * 1px;
   transform: translateY(100%);
+  z-index: 1;
 
   .scrollable-list {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: scroll;
 
-    &.sized {
-      max-height: v-bind(maxheight);
-    }
+    /* firefox 64 */
+    scrollbar-color: var(--color-scrollbar) transparent;
 
     /* width */
     &::-webkit-scrollbar {
@@ -150,9 +150,8 @@ export default defineComponent({
       height: $fib-4 * 1px;
     }
 
-    /* Track */
-    &::-webkit-scrollbar-track {
-      background: none;
+    &::-webkit-scrollbar-track:hover {
+      background: transparent;
     }
 
     /* Handle */
@@ -164,6 +163,10 @@ export default defineComponent({
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       background: var(--color-scrollbar-hover);
+    }
+
+    &.sized {
+      max-height: v-bind(maxheight);
     }
   }
 
@@ -180,12 +183,13 @@ export default defineComponent({
     padding: $fib-4 * 1px;
     padding-top: $fib-6 * 1px;
     padding-bottom: $fib-6 * 1px;
+    color: var(--color-text-primary);
     text-align: start;
     background: none;
     border: none;
 
     &:hover:not(:active) {
-      background: var(--color-background-highlight);
+      background: var(--color-bg-highlight);
     }
   }
 }

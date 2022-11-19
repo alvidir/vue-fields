@@ -112,6 +112,7 @@ export default defineComponent({
 
 .regular-field {
   width: 100%;
+  z-index: 0;
 
   &:focus-within,
   &.active {

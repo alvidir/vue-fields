@@ -1,38 +1,152 @@
 <template>
   <div id="app">
-    <div class="demo-item">
-      <regular-field
-        :error="regularFieldError"
-        :placeholder="'Write something here'"
-        :large="true"
-        :readonly="readonly"
-        :type="'password'"
-        @input="onRegularFieldChange"
-      >
-      </regular-field>
+    <div class="demo-set light">
+      <div class="demo-subset bg-secondary">
+        <div class="demo-item">
+          <regular-field
+            :error="regularFieldError"
+            :placeholder="'Write something here'"
+            :large="true"
+            :readonly="readonly"
+            :type="'password'"
+            @input="onRegularFieldChange"
+          >
+          </regular-field>
+        </div>
+        <div class="demo-item">
+          <discret-field
+            :error="discretFieldError"
+            :placeholder="'Welcome to Cartago'"
+            :large="true"
+            :readonly="readonly"
+            @complete="onDiscretFieldComplete"
+          >
+          </discret-field>
+        </div>
+        <div class="demo-item">
+          <search-field
+            :placeholder="'Search'"
+            :large="false"
+            :items="searchItems"
+            @click="onClick"
+            @input="onChange"
+            @select="onSelect"
+            v-slot="props"
+          >
+            <label class="search-item">{{ props.item.title }}</label>
+          </search-field>
+        </div>
+      </div>
+      <div class="demo-subset bg-primary">
+        <div class="demo-item">
+          <regular-field
+            :error="regularFieldError"
+            :placeholder="'Write something here'"
+            :large="true"
+            :readonly="readonly"
+            :type="'password'"
+            @input="onRegularFieldChange"
+          >
+          </regular-field>
+        </div>
+        <div class="demo-item">
+          <discret-field
+            :error="discretFieldError"
+            :placeholder="'Welcome to Cartago'"
+            :large="true"
+            :readonly="readonly"
+            @complete="onDiscretFieldComplete"
+          >
+          </discret-field>
+        </div>
+        <div class="demo-item">
+          <search-field
+            :placeholder="'Search'"
+            :large="false"
+            :items="searchItems"
+            @click="onClick"
+            @input="onChange"
+            @select="onSelect"
+            v-slot="props"
+          >
+            <label class="search-item">{{ props.item.title }}</label>
+          </search-field>
+        </div>
+      </div>
     </div>
-    <div class="demo-item">
-      <discret-field
-        :error="discretFieldError"
-        :placeholder="'Welcome to Cartago'"
-        :large="true"
-        :readonly="readonly"
-        @complete="onDiscretFieldComplete"
-      >
-      </discret-field>
-    </div>
-    <div class="demo-item">
-      <search-field
-        :placeholder="'Search'"
-        :large="false"
-        :items="searchItems"
-        @click="onClick"
-        @input="onChange"
-        @select="onSelect"
-        v-slot="props"
-      >
-        <label class="search-item">{{ props.item.title }}</label>
-      </search-field>
+    <div class="demo-set dark">
+      <div class="demo-subset bg-secondary">
+        <div class="demo-item">
+          <regular-field
+            :error="regularFieldError"
+            :placeholder="'Write something here'"
+            :large="true"
+            :readonly="readonly"
+            :type="'password'"
+            @input="onRegularFieldChange"
+          >
+          </regular-field>
+        </div>
+        <div class="demo-item">
+          <discret-field
+            :error="discretFieldError"
+            :placeholder="'Welcome to Cartago'"
+            :large="true"
+            :readonly="readonly"
+            @complete="onDiscretFieldComplete"
+          >
+          </discret-field>
+        </div>
+        <div class="demo-item">
+          <search-field
+            :placeholder="'Search'"
+            :large="false"
+            :items="searchItems"
+            @click="onClick"
+            @input="onChange"
+            @select="onSelect"
+            v-slot="props"
+          >
+            <label class="search-item">{{ props.item.title }}</label>
+          </search-field>
+        </div>
+      </div>
+      <div class="demo-subset bg-primary">
+        <div class="demo-item">
+          <regular-field
+            :error="regularFieldError"
+            :placeholder="'Write something here'"
+            :large="true"
+            :readonly="readonly"
+            :type="'password'"
+            @input="onRegularFieldChange"
+          >
+          </regular-field>
+        </div>
+        <div class="demo-item">
+          <discret-field
+            :error="discretFieldError"
+            :placeholder="'Welcome to Cartago'"
+            :large="true"
+            :readonly="readonly"
+            @complete="onDiscretFieldComplete"
+          >
+          </discret-field>
+        </div>
+        <div class="demo-item">
+          <search-field
+            :placeholder="'Search'"
+            :large="false"
+            :items="searchItems"
+            @click="onClick"
+            @input="onChange"
+            @select="onSelect"
+            v-slot="props"
+          >
+            <label class="search-item">{{ props.item.title }}</label>
+          </search-field>
+        </div>
+      </div>
     </div>
   </div>
 </template>
@@ -89,8 +203,6 @@ export default defineComponent({
 @import "fibonacci-styles";
 
 * {
-  @extend .theme-dark;
-
   margin: 0;
   padding: 0;
   font-family: "Raleway", Helvetica, Arial, sans-serif;
@@ -106,20 +218,47 @@ body {
   position: relative;
   min-height: 100vh;
   width: 100%;
-  background: var(--color-background-secondary);
+}
+
+.demo-set {
+  display: flex;
+  flex-direction: column;
+  width: 100%;
+  height: 100vh;
+
+  &.light {
+    @extend .theme-light;
+  }
+
+  &.dark {
+    @extend .theme-dark;
+  }
+
+  .demo-subset {
+    display: flex;
+    flex-direction: column;
+    width: 100%;
+    height: 50%;
+
+    &.bg-primary {
+      background-color: var(--color-bg-primary) !important;
+    }
+
+    &.bg-secondary {
+      background-color: var(--color-bg-secondary) !important;
+    }
+  }
 }
 
 .demo-item {
   flex: 1;
-  padding: 20px;
+  padding-top: 20px;
+  padding-bottom: 20px;
+  padding-left: 200px;
+  padding-right: 200px;
   display: flex;
   flex-direction: column;
   justify-content: center;
-}
-
-.search-item {
-  font-size: 1rem;
-  margin-left: $fib-5 * 1px;
-  color: var(--color-text);
+  align-items: center;
 }
 </style>
