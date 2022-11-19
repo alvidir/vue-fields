@@ -90,7 +90,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import "global.scss";
+@import "styles.scss";
 
 .discret-field {
   width: 100%;

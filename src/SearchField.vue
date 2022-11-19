@@ -110,7 +110,7 @@ export default defineComponent({
 </script>
 
 <style scoped lang="scss">
-@import "./global.scss";
+@import "./styles.scss";
 
 .border-line {
   @extend .round-corners, .fib-5;

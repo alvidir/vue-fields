@@ -108,7 +108,7 @@ export default defineComponent({
 </script>
 
 <style lang="scss">
-@import "./global.scss";
+@import "./styles.scss";
 
 .regular-field {
   width: 100%;
