@@ -1,10 +1,10 @@
 <template>
-  <div class="search-field" :class="{ active: value.length, large: large }">
+  <div class="search-field" :class="{ active: text.length, large: large }">
     <div class="input-container" :class="{ large: large }" @click="focus()">
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
         ref="entry"
-        v-model="value"
+        v-model="text"
         :maxlength="maxlength"
         @input="onChange"
       />
@@ -47,6 +47,7 @@ import {
   CLICK_EVENT_NAME,
   SELECT_EVENT_NAME,
 } from "./constants";
+import { FieldController } from "./main";
 
 export default defineComponent({
   name: "SearchField",
@@ -71,39 +72,47 @@ export default defineComponent({
 
   data() {
     return {
-      value: "",
+      text: "",
       timeout: undefined as number | undefined,
     };
   },
 
   methods: {
-    focus() {
-      let entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.focus();
-    },
-
     onSearch() {
-      if (this.value.length) {
-        this.$emit(CLICK_EVENT_NAME, this.value);
+      if (this.text.length) {
+        this.$emit(CLICK_EVENT_NAME, this.text);
       }
     },
 
     onChange() {
-      const value = this.value;
+      const value = this.text;
       if (!this.debounce) {
-        this.$emit(INPUT_EVENT_NAME, value);
+        this.$emit(INPUT_EVENT_NAME, this as FieldController);
         return;
       }
 
       clearTimeout(this.timeout);
       this.timeout = setTimeout(
-        () => this.$emit(INPUT_EVENT_NAME, value),
+        () => this.$emit(INPUT_EVENT_NAME, this as FieldController),
         this.debounce
       );
     },
 
     onSelect(selected: string) {
       this.$emit(SELECT_EVENT_NAME, selected);
+    },
+
+    clear() {
+      this.text = "";
+    },
+
+    value(): string {
+      return this.text;
+    },
+
+    focus() {
+      let entryRef = this.$refs.entry as HTMLInputElement;
+      entryRef.focus();
     },
   },
 });
@@ -201,15 +210,8 @@ export default defineComponent({
 
   &:focus-within .items-container,
   &:hover.active .items-container {
+    @extend .shadow-box;
     visibility: visible;
-
-    $shift: $fib-1 * 1px;
-    $blur: $fib-5 * 1px;
-    $opacity: $fib-3 * 0.1;
-
-    -webkit-box-shadow: 0px $shift $blur 0px rgba(0, 0, 0, $opacity);
-    -moz-box-shadow: 0px $shift $blur 0px rgba(0, 0, 0, $opacity);
-    box-shadow: 0px $shift $blur 0px rgba(0, 0, 0, $opacity);
   }
 
   &:focus-within,

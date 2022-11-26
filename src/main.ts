@@ -7,7 +7,13 @@ const REGULAR_FIELD_TAG = "regular-field";
 const DISCRET_FIELD_TAG = "discret-field";
 const SEARCH_FIELD_TAG = "search-field";
 
-export { RegularField, DiscretField };
+export interface FieldController {
+  clear: () => void;
+  value: () => string;
+  focus: () => void;
+}
+
+export { RegularField, DiscretField, SearchField };
 
 export function include(app: any): any {
   app

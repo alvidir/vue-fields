@@ -9,6 +9,7 @@
             :large="true"
             :readonly="readonly"
             :type="'password'"
+            ref="focused"
             @input="onRegularFieldChange"
           >
           </regular-field>
@@ -154,6 +155,7 @@
 <script lang="ts">
 import { defineComponent } from "vue";
 import { Item } from "@/SearchField.vue";
+import { FieldController } from "@/main";
 
 export default defineComponent({
   name: "ServeDev",
@@ -195,6 +197,11 @@ export default defineComponent({
     onSelect(selected: string) {
       console.log("selected: ", this.searchItems[+selected].title);
     },
+  },
+
+  mounted() {
+    const ctrl: FieldController = this.$refs["focused"];
+    ctrl.focus();
   },
 });
 </script>

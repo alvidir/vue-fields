@@ -81,7 +81,7 @@ input.transparent {
 .error-container {
   color: var(--color-red);
   padding-top: $fib-4 * 1px;
-  padding-bottom: $margin-bounds;
+  padding-bottom: $fib-5 * 1px;
   transition: opacity $transition-lapse, transform $transition-lapse;
 
   span {

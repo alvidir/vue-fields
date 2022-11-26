@@ -1,5 +1,5 @@
 <template>
-  <div class="regular-field" :class="{ active: value.length, large: large }">
+  <div class="regular-field" :class="{ active: text.length, large: large }">
     <div
       class="input-container"
       :class="{ error: hasError, large: large }"
@@ -8,7 +8,7 @@
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
         ref="entry"
-        v-model="value"
+        v-model="text"
         :maxlength="maxlength"
         :type="inputType"
         @input="onChange"
@@ -32,6 +32,7 @@ import {
   PASSWORD_INPUT_TYPE,
   TEXT_INPUT_TYPE,
 } from "./constants";
+import { FieldController } from "./main";
 
 export default defineComponent({
   name: "RegularField",
@@ -56,7 +57,7 @@ export default defineComponent({
 
   data() {
     return {
-      value: "",
+      text: "",
       visible: false,
       timeout: undefined as number | undefined,
     };
@@ -68,7 +69,7 @@ export default defineComponent({
     },
 
     showButton(): boolean {
-      return this.type == PASSWORD_INPUT_TYPE && this.value.length > 0;
+      return this.type == PASSWORD_INPUT_TYPE && this.text.length > 0;
     },
 
     inputType(): string {
@@ -81,27 +82,35 @@ export default defineComponent({
   },
 
   methods: {
-    focus() {
-      let entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.focus();
-    },
-
     switchVisibility() {
       this.visible = !this.visible;
     },
 
     onChange() {
-      const value = this.value;
+      const value = this.text;
       if (!this.debounce) {
-        this.$emit(INPUT_EVENT_NAME, value);
+        this.$emit(INPUT_EVENT_NAME, this as FieldController);
         return;
       }
 
       clearTimeout(this.timeout);
       this.timeout = setTimeout(
-        () => this.$emit(INPUT_EVENT_NAME, value),
+        () => this.$emit(INPUT_EVENT_NAME, this as FieldController),
         this.debounce
       );
+    },
+
+    clear() {
+      this.text = "";
+    },
+
+    value(): string {
+      return this.text;
+    },
+
+    focus() {
+      let entryRef = this.$refs.entry as HTMLInputElement;
+      entryRef.focus();
     },
   },
 });
