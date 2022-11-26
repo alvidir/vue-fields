@@ -11,6 +11,7 @@ export interface FieldController {
   clear: () => void;
   value: () => string;
   focus: () => void;
+  blur: () => void;
 }
 
 export { RegularField, DiscretField, SearchField };

@@ -109,8 +109,13 @@ export default defineComponent({
     },
 
     focus() {
-      let entryRef = this.$refs.entry as HTMLInputElement;
+      const entryRef = this.$refs.entry as HTMLInputElement;
       entryRef.focus();
+    },
+
+    blur() {
+      const entryRef = this.$refs.entry as HTMLInputElement;
+      entryRef.blur();
     },
   },
 });
