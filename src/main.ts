@@ -1,4 +1,4 @@
-/* eslint-disable */
+import { App } from "vue";
 import RegularField from "./RegularField.vue";
 import DiscretField from "./DiscretField.vue";
 import SearchField from "./SearchField.vue";
@@ -7,18 +7,30 @@ const REGULAR_FIELD_TAG = "regular-field";
 const DISCRET_FIELD_TAG = "discret-field";
 const SEARCH_FIELD_TAG = "search-field";
 
-export interface FieldController {
+interface FieldController {
   clear: () => void;
   value: () => string;
   focus: () => void;
   blur: () => void;
 }
 
-export { RegularField, DiscretField, SearchField };
-
-export function include(app: any): any {
-  app
+function include(app: App): App {
+  return app
     .component(REGULAR_FIELD_TAG, RegularField)
     .component(DISCRET_FIELD_TAG, DiscretField)
     .component(SEARCH_FIELD_TAG, SearchField);
 }
+
+export default {
+  RegularField,
+  DiscretField,
+  SearchField,
+};
+
+export {
+  include,
+  FieldController,
+  REGULAR_FIELD_TAG,
+  DISCRET_FIELD_TAG,
+  SEARCH_FIELD_TAG,
+};
