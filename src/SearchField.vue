@@ -85,7 +85,6 @@ export default defineComponent({
     },
 
     onChange() {
-      const value = this.text;
       if (!this.debounce) {
         this.$emit(INPUT_EVENT_NAME, this as FieldController);
         return;
@@ -127,7 +126,8 @@ export default defineComponent({
 @import "./styles.scss";
 
 .border-line {
-  @extend .round-corners, .fib-5;
+  @extend .round-corners;
+
   &:focus-within {
     outline: $fib-2 * 1px solid;
   }
@@ -139,7 +139,8 @@ export default defineComponent({
 }
 
 .items-container {
-  @extend .round-corners, .fib-6;
+  @extend .round-corners-fib-6;
+
   position: absolute;
   visibility: hidden;
   width: 100%;
@@ -170,7 +171,8 @@ export default defineComponent({
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-      @extend .round-corners, .fib-5;
+      @extend .round-corners;
+
       background: var(--color-scrollbar);
     }
 
@@ -191,7 +193,8 @@ export default defineComponent({
   }
 
   button.item {
-    @extend .round-corners, .fib-4;
+    @extend .round-corners-fib-4;
+
     margin-left: $fib-4 * 1px;
     margin-right: $fib-4 * 1px;
     padding: $fib-4 * 1px;

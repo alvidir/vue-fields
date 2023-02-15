@@ -87,7 +87,6 @@ export default defineComponent({
     },
 
     onChange() {
-      const value = this.text;
       if (!this.debounce) {
         this.$emit(INPUT_EVENT_NAME, this as FieldController);
         return;

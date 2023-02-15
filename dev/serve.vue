@@ -170,25 +170,28 @@ export default defineComponent({
   },
 
   methods: {
-    onRegularFieldChange(value: string) {
+    onRegularFieldChange(ctrl: FieldController) {
       this.regularFieldError =
-        value.length > 0 && value !== "something" ? "Read carefully..." : "";
+        ctrl.value().length > 0 && ctrl.value() !== "something"
+          ? "Read carefully..."
+          : "";
     },
 
-    onDiscretFieldComplete(value: string) {
-      this.discretFieldError = value !== "scipio" ? "Incorrect input" : "";
+    onDiscretFieldComplete(ctrl: FieldController) {
+      this.discretFieldError =
+        ctrl.value() !== "scipio" ? "Incorrect input" : "";
     },
 
     onClick(value: string) {
       console.log("search click: ", value);
     },
 
-    onChange(value: string) {
-      console.log("search change: ", value);
+    onChange(ctrl: FieldController) {
+      console.log("search change: ", ctrl.value());
       this.searchItems.splice(0, this.searchItems.length);
-      for (var i = 0; i < value.length; i++) {
+      for (var i = 0; i < ctrl.value().length; i++) {
         this.searchItems.push({
-          title: value.substring(0, value.length - i),
+          title: ctrl.value().substring(0, ctrl.value().length - i),
           id: i.toString(),
         });
       }
