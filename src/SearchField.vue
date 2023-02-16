@@ -206,7 +206,7 @@ export default defineComponent({
     border: none;
 
     &:hover:not(:active) {
-      background: var(--color-bg-highlight);
+      background: var(--color-button-hover);
     }
   }
 }
