@@ -1,20 +1,102 @@
+<script setup lang="ts">
+import {
+  withDefaults,
+  defineProps,
+  defineEmits,
+  ref,
+  computed,
+  defineExpose,
+} from "vue";
+import { InputType, Field } from "./types";
+
+interface Props {
+  placeholder?: string;
+  error?: string;
+  large?: boolean;
+  maxlength?: number;
+  type?: InputType;
+  debounce?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  maxLength: 255,
+  type: InputType.Text,
+});
+
+interface Events {
+  (e: "input", payload: Event): void;
+}
+
+const emit = defineEmits<Events>();
+
+const inputText = ref("");
+const entrypoint = ref<HTMLInputElement>();
+const showInputText = ref(props.type == InputType.Text);
+const actualInputType = computed((): InputType => {
+  return props.type == InputType.Password && !showInputText.value
+    ? InputType.Password
+    : InputType.Text;
+});
+
+const isConcealable = computed((): boolean => {
+  return props.type === InputType.Password && inputText.value.length > 0;
+});
+
+let timeout: number | undefined = undefined;
+const onInput = (payload: Event) => {
+  if (props.debounce) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => emit("input", payload), props.debounce);
+  } else {
+    emit("input", payload);
+  }
+};
+
+const text = (): string => {
+  return inputText.value;
+};
+
+const clear = () => {
+  inputText.value = "";
+};
+
+const focus = () => {
+  entrypoint.value?.focus();
+};
+
+const blur = () => {
+  entrypoint.value?.blur();
+};
+
+defineExpose<Field>({
+  text,
+  clear,
+  focus,
+  blur,
+});
+</script>
+
 <template>
-  <div class="regular-field" :class="{ active: text.length, large: large }">
+  <div class="regular-field" :class="{ active: inputText, large: large }">
     <div
       class="input-container"
-      :class="{ error: hasError, large: large }"
-      @click="focus()"
+      :class="{ error: error, large: large }"
+      @click="focus"
     >
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
-        ref="entry"
-        v-model="text"
+        ref="entrypoint"
+        v-model="inputText"
         :maxlength="maxlength"
-        :type="inputType"
-        @input="onChange"
+        :type="actualInputType"
+        @input="onInput"
       />
-      <button v-if="showButton" tabindex="-1" @click="switchVisibility">
-        {{ visible ? "&#10033;" : "Aa" }}
+      <button
+        v-if="isConcealable"
+        tabindex="-1"
+        @click="() => (showInputText = !showInputText)"
+      >
+        {{ showInputText ? "&#10033;" : "Aa" }}
       </button>
     </div>
     <div class="error-container" v-if="error">
@@ -24,101 +106,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent } from "vue";
-import {
-  INPUT_EVENT_NAME,
-  PASSWORD_INPUT_TYPE,
-  TEXT_INPUT_TYPE,
-} from "./constants";
-import { FieldController } from "./main";
-
-export default defineComponent({
-  name: "RegularField",
-  components: {},
-
-  emits: [INPUT_EVENT_NAME],
-
-  props: {
-    placeholder: String,
-    error: String,
-    large: Boolean,
-    maxlength: {
-      type: Number,
-      default: 255,
-    },
-    type: {
-      type: String,
-      default: TEXT_INPUT_TYPE,
-    },
-    debounce: Number,
-  },
-
-  data() {
-    return {
-      text: "",
-      visible: false,
-      timeout: undefined as number | undefined,
-    };
-  },
-
-  computed: {
-    hasError(): boolean {
-      return this.error != undefined && this.error.length > 0;
-    },
-
-    showButton(): boolean {
-      return this.type == PASSWORD_INPUT_TYPE && this.text.length > 0;
-    },
-
-    inputType(): string {
-      if (this.type === PASSWORD_INPUT_TYPE && !this.visible) {
-        return PASSWORD_INPUT_TYPE;
-      } else {
-        return TEXT_INPUT_TYPE;
-      }
-    },
-  },
-
-  methods: {
-    switchVisibility() {
-      this.visible = !this.visible;
-    },
-
-    onChange() {
-      if (!this.debounce) {
-        this.$emit(INPUT_EVENT_NAME, this as FieldController);
-        return;
-      }
-
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(
-        () => this.$emit(INPUT_EVENT_NAME, this as FieldController),
-        this.debounce
-      );
-    },
-
-    clear() {
-      this.text = "";
-    },
-
-    value(): string {
-      return this.text;
-    },
-
-    focus() {
-      const entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.focus();
-    },
-
-    blur() {
-      const entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.blur();
-    },
-  },
-});
-</script>
 
 <style lang="scss">
 @import "./styles.scss";
@@ -149,29 +136,29 @@ export default defineComponent({
     }
   }
 
-  .input-container {
+  & > .input-container {
     position: relative;
     display: flex;
     cursor: text;
 
-    label,
-    input {
+    & > label,
+    & > input {
       height: $default-height;
       line-height: $default-height;
       padding-left: $margin-bounds;
     }
 
-    label {
+    & > label {
       position: absolute;
       cursor: text;
     }
 
-    input {
+    & > input {
       margin-top: auto;
       flex: 1;
     }
 
-    button {
+    & > button {
       min-width: $active-height;
       height: $default-height;
       color: var(--color-green);
@@ -181,7 +168,7 @@ export default defineComponent({
       border: none;
       padding: 0px;
 
-      transition: height $transition-lapse, color $transition-lapse;
+      transition: height $slower-fade, color $medium-fade;
 
       &:hover {
         font-weight: 800;

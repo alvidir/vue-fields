@@ -1,14 +1,80 @@
+<script setup lang="ts">
+import { withDefaults, defineProps, defineEmits, ref, defineExpose } from "vue";
+import { Field } from "./types";
+
+interface Props {
+  placeholder?: string;
+  large?: boolean;
+  items: Array<unknown>;
+  maxlength?: number;
+  maxheight?: string;
+  debounce?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  maxLength: 255,
+  maxheight: "34vh",
+});
+
+interface Events {
+  (e: "input", payload: Event): void;
+  (e: "click", payload: MouseEvent, item: unknown): void;
+}
+
+const emit = defineEmits<Events>();
+
+const inputText = ref("");
+const entrypoint = ref<HTMLInputElement>();
+
+let timeout: number | undefined = undefined;
+const onInput = (payload: Event) => {
+  if (props.debounce) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => emit("input", payload), props.debounce);
+  } else {
+    emit("input", payload);
+  }
+};
+
+const onClick = (payload: MouseEvent, item: unknown) => {
+  emit("click", payload, item);
+};
+
+const text = (): string => {
+  return inputText.value;
+};
+
+const clear = () => {
+  inputText.value = "";
+};
+
+const focus = () => {
+  entrypoint.value?.focus();
+};
+
+const blur = () => {
+  entrypoint.value?.blur();
+};
+
+defineExpose<Field>({
+  text,
+  clear,
+  focus,
+  blur,
+});
+</script>
+
 <template>
-  <div class="search-field" :class="{ active: text.length, large: large }">
-    <div class="input-container" :class="{ large: large }" @click="focus()">
+  <div class="search-field" :class="{ active: text(), large: large }">
+    <div class="input-container" :class="{ large: large }" @click="focus">
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
-        ref="entry"
-        v-model="text"
+        ref="entrypoint"
+        v-model="inputText"
         :maxlength="maxlength"
-        @input="onChange"
+        @input="onInput"
       />
-      <button tabindex="-1" @click="onSearch">
+      <button tabindex="-1" @click="emit('input', $event)">
         <svg
           x="0px"
           y="0px"
@@ -17,8 +83,8 @@
         >
           <path
             d="M481.8,453l-140-140.1c27.6-33.1,44.2-75.4,44.2-121.6C386,85.9,299.5,0.2,193.1,0.2S0,86,0,191.4s86.5,191.1,192.9,191.1
-          c45.2,0,86.8-15.5,119.8-41.4l140.5,140.5c8.2,8.2,20.4,8.2,28.6,0C490,473.4,490,461.2,481.8,453z M41,191.4
-          c0-82.8,68.2-150.1,151.9-150.1s151.9,67.3,151.9,150.1s-68.2,150.1-151.9,150.1S41,274.1,41,191.4z"
+            c45.2,0,86.8-15.5,119.8-41.4l140.5,140.5c8.2,8.2,20.4,8.2,28.6,0C490,473.4,490,461.2,481.8,453z M41,191.4
+            c0-82.8,68.2-150.1,151.9-150.1s151.9,67.3,151.9,150.1s-68.2,150.1-151.9,150.1S41,274.1,41,191.4z"
           />
         </svg>
       </button>
@@ -31,7 +97,7 @@
           v-for="(item, index) in items"
           :key="index"
           class="item"
-          @click="onSelect(item)"
+          @click="onClick($event, item)"
         >
           <slot :item="item"> </slot>
         </button>
@@ -39,88 +105,6 @@
     </div>
   </div>
 </template>
-
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import {
-  INPUT_EVENT_NAME,
-  CLICK_EVENT_NAME,
-  SELECT_EVENT_NAME,
-} from "./constants";
-import { FieldController } from "./main";
-
-export default defineComponent({
-  name: "SearchField",
-  components: {},
-
-  emits: [INPUT_EVENT_NAME, CLICK_EVENT_NAME, SELECT_EVENT_NAME],
-
-  props: {
-    placeholder: String,
-    large: Boolean,
-    items: Array as PropType<Array<unknown>>,
-    maxheight: {
-      type: String,
-      default: "30vh",
-    },
-    maxlength: {
-      type: Number,
-      default: 255,
-    },
-    debounce: Number,
-  },
-
-  data() {
-    return {
-      text: "",
-      timeout: undefined as number | undefined,
-    };
-  },
-
-  methods: {
-    onSearch() {
-      if (this.text.length) {
-        this.$emit(CLICK_EVENT_NAME, this.text);
-      }
-    },
-
-    onChange() {
-      if (!this.debounce) {
-        this.$emit(INPUT_EVENT_NAME, this as FieldController);
-        return;
-      }
-
-      clearTimeout(this.timeout);
-      this.timeout = setTimeout(
-        () => this.$emit(INPUT_EVENT_NAME, this as FieldController),
-        this.debounce
-      );
-    },
-
-    onSelect(selected: string) {
-      this.$emit(SELECT_EVENT_NAME, selected);
-    },
-
-    clear() {
-      this.text = "";
-    },
-
-    value(): string {
-      return this.text;
-    },
-
-    focus() {
-      const entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.focus();
-    },
-
-    blur() {
-      const entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.blur();
-    },
-  },
-});
-</script>
 
 <style scoped lang="scss">
 @import "./styles.scss";
@@ -147,7 +131,7 @@ export default defineComponent({
   bottom: 100%;
   background-color: var(--color-bg-primary);
   padding-top: $active-height + $fib-6 * 1px;
-  padding-bottom: $fib-5 * 1px;
+  padding-bottom: $fib-4 * 1px;
   transform: translateY(100%);
   z-index: 1;
 
@@ -279,7 +263,7 @@ export default defineComponent({
       border: none;
       padding: 0;
 
-      transition: height $transition-lapse, color $transition-lapse;
+      transition: height $slower-fade, color $medium-fade;
 
       &:hover {
         font-weight: 800;

@@ -1,7 +1,6 @@
 @use "sass:math";
 @import "fibonacci-styles";
 
-$transition-lapse: $fib-7 * 0.01s ease-in-out;
 $default-height: $fib-8 * 1px;
 $active-height: $fib-9 * 1px;
 $small-font-size: $fib-6 * 1px;
@@ -22,7 +21,7 @@ $margin-bounds: $fib-6 * 1px;
   color: var(--color-text-primary);
 
   input {
-    transition: height $transition-lapse;
+    transition: height $slower-fade;
     color: var(--color-text-primary);
   }
 }
@@ -66,12 +65,12 @@ input.transparent {
   display: flex;
   max-width: 100%;
   min-height: $default-height;
-  transition: min-height $transition-lapse, background $transition-lapse,
-    border-color $transition-lapse;
+  transition: min-height $slower-fade, background $medium-fade,
+    border-color $medium-fade;
 
   label {
     color: var(--color-text-secondary);
-    transition: font-size $transition-lapse, line-height $transition-lapse;
+    transition: font-size $slower-fade, line-height $slower-fade;
   }
 
   input {
@@ -83,7 +82,7 @@ input.transparent {
   color: var(--color-red);
   padding-top: $fib-4 * 1px;
   padding-bottom: $fib-5 * 1px;
-  transition: opacity $transition-lapse, transform $transition-lapse;
+  transition: opacity $medium-fade transform $medium-fade;
 
   span {
     font-size: $small-font-size;

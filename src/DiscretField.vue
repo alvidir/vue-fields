@@ -1,22 +1,95 @@
+<script setup lang="ts">
+import { withDefaults, defineProps, defineEmits, ref, defineExpose } from "vue";
+import { InputType, Field } from "./types";
+
+interface Props {
+  placeholder?: string;
+  error?: string;
+  large?: boolean;
+  length?: number;
+  type?: InputType;
+  debounce?: number;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  length: 6,
+  type: InputType.Text,
+});
+
+interface Events {
+  (e: "input", payload: Event): void;
+  (e: "complete", payload: Event): void;
+}
+
+const emit = defineEmits<Events>();
+
+const inputCells = ref(new Array<string>(length));
+const entrypoint = ref<Array<HTMLInputElement>>();
+
+let timeout: number | undefined = undefined;
+const onInput = (payload: Event, index: number) => {
+  const emitInputEvent = (payload: Event) => {
+    emit("input", payload);
+
+    if (text().length == props.length) {
+      emit("complete", payload);
+    }
+  };
+
+  if (props.debounce) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => emitInputEvent(payload), props.debounce);
+  } else {
+    emitInputEvent(payload);
+  }
+
+  const value = inputCells.value?.at(index) ?? "";
+  const previous = !value && index < 2 ? 0 : index - 2;
+  entrypoint.value?.at(value ? index : previous)?.focus();
+};
+
+const text = (): string => {
+  return inputCells.value.filter((value) => value.length).join("");
+};
+
+const clear = () => {
+  inputCells.value.forEach((_, index, array) => (array[index] = ""));
+};
+
+const focus = () => {
+  entrypoint.value?.at(0)?.focus();
+};
+
+const blur = () => {
+  entrypoint.value?.forEach((input) => input.blur());
+};
+
+defineExpose<Field>({
+  text,
+  clear,
+  focus,
+  blur,
+});
+</script>
+
 <template>
-  <div class="discret-field" :class="{ active: size }">
+  <div class="discret-field" :class="{ active: text().length }">
     <label v-if="placeholder"> {{ placeholder }} </label>
     <div class="inputs-container">
       <input
+        v-for="index in length"
+        v-model="inputCells[index]"
         maxlength="1"
-        ref="entry"
+        ref="entrypoint"
         class="transparent"
-        v-for="(item, index) in text"
-        v-model="text[index]"
+        :type="type"
         :key="index"
         :class="{
-          active: text[index],
+          active: inputCells[index],
           large: large,
-          final: index == length - 1,
-          error: hasError,
+          error: error,
         }"
-        :type="type"
-        @input="onItemChange(index)"
+        @input="onInput($event, index)"
       />
     </div>
     <div class="error-container" v-if="error">
@@ -27,87 +100,6 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent } from "vue";
-import { INPUT_EVENT_NAME, TEXT_INPUT_TYPE } from "./constants";
-import { FieldController } from "./main";
-
-const COMPLETE_EVENT_NAME = "complete";
-const DEFAULT_INPUT_LEN = 6;
-
-export default defineComponent({
-  name: "DiscretField",
-
-  emits: [INPUT_EVENT_NAME, COMPLETE_EVENT_NAME],
-
-  components: {},
-
-  props: {
-    placeholder: String,
-    error: String,
-    large: Boolean,
-    length: {
-      type: Number,
-      default: DEFAULT_INPUT_LEN,
-    },
-    type: {
-      type: String,
-      default: TEXT_INPUT_TYPE,
-    },
-  },
-
-  data() {
-    return {
-      text: new Array<string>(this.length),
-      focused: 0,
-    };
-  },
-
-  computed: {
-    size(): number {
-      return this.text.filter((item) => item.length).length;
-    },
-
-    hasError(): boolean {
-      return this.error != undefined && this.error.length > 0;
-    },
-  },
-
-  methods: {
-    onItemChange(index: number) {
-      let value = this.value();
-      this.$emit(INPUT_EVENT_NAME, value);
-
-      if (this.size == this.length) {
-        this.$emit(COMPLETE_EVENT_NAME, this as FieldController);
-      }
-
-      let next = this.text[index].length ? ++index : --index;
-      let entryRef = this.$refs["entry"] as HTMLInputElement[];
-      entryRef[next]?.focus();
-    },
-
-    clear() {
-      this.text.forEach((_, index) => (this.text[index] = ""));
-    },
-
-    value(): string {
-      return this.text.join("");
-    },
-
-    focus() {
-      const entryRef = this.$refs["entry"] as HTMLInputElement[];
-      entryRef[0]?.focus();
-    },
-
-    blur() {
-      const entryRef = this.$refs["entry"] as HTMLInputElement[];
-      entryRef[0]?.blur();
-    },
-  },
-});
-</script>
-
 <style lang="scss">
 @import "styles.scss";
 
@@ -115,24 +107,24 @@ export default defineComponent({
   width: 100%;
   z-index: 0;
 
-  label {
-    height: $default-height;
-    line-height: $default-height;
-    transition: font-size $transition-lapse, opacity $transition-lapse;
-  }
-
   &.active label,
   &:focus-within label {
     font-size: $small-font-size;
     color: var(--color-text-secondary);
   }
 
-  .inputs-container {
+  & > label {
+    height: $default-height;
+    line-height: $default-height;
+    transition: font-size $medium-fade, opacity $medium-fade;
+  }
+
+  & > .inputs-container {
     display: flex;
     flex-direction: row;
     align-items: center;
 
-    input {
+    & > input {
       @extend .border-line;
 
       width: 100%;
@@ -140,9 +132,9 @@ export default defineComponent({
       line-height: $default-height;
       text-align: center;
 
-      transition: min-height $transition-lapse, border-color $transition-lapse;
+      transition: min-height $slower-fade, border-color $medium-fade;
 
-      &:not(.final) {
+      &:not(:last-child) {
         margin-right: $margin-bounds;
       }
 
