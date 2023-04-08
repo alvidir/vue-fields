@@ -181,9 +181,6 @@ defineExpose<Field>({
 
     margin-left: $fib-4 * 1px;
     margin-right: $fib-4 * 1px;
-    padding: $fib-4 * 1px;
-    padding-top: $fib-6 * 1px;
-    padding-bottom: $fib-6 * 1px;
     color: var(--color-text-primary);
     text-align: start;
     background: none;
