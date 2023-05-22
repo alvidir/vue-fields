@@ -1,5 +1,5 @@
 <script setup lang="ts">
-import { withDefaults, defineProps, defineEmits, ref, defineExpose } from "vue";
+import { ref } from "vue";
 import { Field } from "./types";
 
 interface Props {

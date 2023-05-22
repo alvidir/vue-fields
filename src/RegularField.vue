@@ -1,12 +1,5 @@
 <script setup lang="ts">
-import {
-  withDefaults,
-  defineProps,
-  defineEmits,
-  ref,
-  computed,
-  defineExpose,
-} from "vue";
+import { ref, computed } from "vue";
 import { InputType, Field } from "./types";
 
 interface Props {
