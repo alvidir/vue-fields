@@ -1,22 +1,21 @@
 <script setup lang="ts">
 import { ref, reactive, onMounted } from "vue";
-import { Field } from "../src/types";
 
 const large = ref(false);
-const regular = ref<Field>();
+
+const regularModel = ref("");
 const regularFieldProps = reactive({
   error: "",
   readonly: false,
 });
 
 const onRegularFieldInput = () => {
-  const text = regular.value?.text() ?? "";
-
+  const text = regularModel.value;
   regularFieldProps.error =
     text.length > 0 && text !== "something" ? "Read carefully..." : "";
 };
 
-const discret = ref<Field>();
+const discretModel = ref("");
 const discretFieldProps = reactive({
   error: "",
   readonly: false,
@@ -24,15 +23,16 @@ const discretFieldProps = reactive({
 
 const onDiscretFieldComplete = () => {
   discretFieldProps.error =
-    discret.value?.text() !== "scipio" ? "Incorrect input" : "";
+    discretModel.value !== "scipio" ? "Incorrect input" : "";
 };
 
-const search = ref<Field>();
+const searchModel = ref("");
 const searchFieldItems = ref(new Array<string>());
 
 const onSearchFieldInput = () => {
   searchFieldItems.value = [];
-  const text = search.value?.text() ?? "";
+  const text = searchModel.value;
+
   for (let n = text.length; n > 0; n--) {
     searchFieldItems.value.push(text.substring(0, n));
   }
@@ -50,19 +50,20 @@ onMounted(() => {
 <template>
   <div class="demo-item">
     <regular-field
-      ref="regular"
+      v-model="regularModel"
       :error="regularFieldProps.error"
       :placeholder="'Write something here'"
       :large="large"
       :readonly="regularFieldProps.readonly"
       :type="'password'"
+      :debounce="300"
       @input="onRegularFieldInput"
     >
     </regular-field>
   </div>
   <div class="demo-item">
     <discret-field
-      ref="discret"
+      v-model="discretModel"
       :error="discretFieldProps.error"
       :placeholder="'Welcome to Cartago'"
       :large="large"
@@ -73,7 +74,7 @@ onMounted(() => {
   </div>
   <div class="demo-item">
     <search-field
-      ref="search"
+      v-model="searchModel"
       :placeholder="'Search'"
       :large="large"
       :items="searchFieldItems"

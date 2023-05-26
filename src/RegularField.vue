@@ -1,56 +1,51 @@
 <script setup lang="ts">
 import { ref, computed } from "vue";
-import { InputType, Field } from "./types";
 
 interface Props {
+  modelValue: string;
   placeholder?: string;
   error?: string;
   large?: boolean;
   maxlength?: number;
-  type?: InputType;
+  type?: string;
   debounce?: number;
+  readonly?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   maxLength: 255,
-  type: InputType.Text,
+  type: "text",
 });
 
 interface Events {
   (e: "input", payload: Event): void;
+  (e: "update:modelValue", payload: string): void;
 }
 
 const emit = defineEmits<Events>();
 
-const inputText = ref("");
 const entrypoint = ref<HTMLInputElement>();
-const showInputText = ref(props.type == InputType.Text);
-const actualInputType = computed((): InputType => {
-  return props.type == InputType.Password && !showInputText.value
-    ? InputType.Password
-    : InputType.Text;
+const showInputText = ref(props.type == "text");
+const actualInputType = computed((): string => {
+  if (showInputText.value) return "text";
+  else return props.type;
 });
 
 const isConcealable = computed((): boolean => {
-  return props.type === InputType.Password && inputText.value.length > 0;
+  return props.type === "password" && props.modelValue.length > 0;
 });
 
 let timeout: number | undefined = undefined;
 const onInput = (payload: Event) => {
+  const text = entrypoint.value?.value ?? "";
+  emit("update:modelValue", text);
+
   if (props.debounce) {
     clearTimeout(timeout);
     timeout = setTimeout(() => emit("input", payload), props.debounce);
   } else {
     emit("input", payload);
   }
-};
-
-const text = (): string => {
-  return inputText.value;
-};
-
-const clear = () => {
-  inputText.value = "";
 };
 
 const focus = () => {
@@ -61,16 +56,14 @@ const blur = () => {
   entrypoint.value?.blur();
 };
 
-defineExpose<Field>({
-  text,
-  clear,
+defineExpose({
   focus,
   blur,
 });
 </script>
 
 <template>
-  <div class="regular-field" :class="{ active: inputText, large: large }">
+  <div class="regular-field" :class="{ active: modelValue, large: large }">
     <div
       class="input-container"
       :class="{ error: error, large: large }"
@@ -79,9 +72,10 @@ defineExpose<Field>({
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
         ref="entrypoint"
-        v-model="inputText"
+        :value="modelValue"
         :maxlength="maxlength"
         :type="actualInputType"
+        :readonly="readonly"
         @input="onInput"
       />
       <button

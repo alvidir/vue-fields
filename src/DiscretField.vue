@@ -1,37 +1,45 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { InputType, Field } from "./types";
 
 interface Props {
+  modelValue: string;
   placeholder?: string;
   error?: string;
   large?: boolean;
   length?: number;
-  type?: InputType;
+  type?: string;
   debounce?: number;
+  readonly?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
   length: 6,
-  type: InputType.Text,
+  type: "text",
 });
 
 interface Events {
   (e: "input", payload: Event): void;
   (e: "complete", payload: Event): void;
+  (e: "update:modelValue", payload: string): void;
 }
 
 const emit = defineEmits<Events>();
-
-const inputCells = ref(new Array<string>(length));
 const entrypoint = ref<Array<HTMLInputElement>>();
 
 let timeout: number | undefined = undefined;
 const onInput = (payload: Event, index: number) => {
+  const actualText =
+    entrypoint.value
+      ?.map((entry) => entry.value)
+      .filter((value) => value.length)
+      .join("") ?? "";
+
+  emit("update:modelValue", actualText);
+
   const emitInputEvent = (payload: Event) => {
     emit("input", payload);
 
-    if (text().length == props.length) {
+    if (actualText.length == props.length) {
       emit("complete", payload);
     }
   };
@@ -43,17 +51,9 @@ const onInput = (payload: Event, index: number) => {
     emitInputEvent(payload);
   }
 
-  const value = inputCells.value?.at(index) ?? "";
-  const previous = !value && index < 2 ? 0 : index - 2;
-  entrypoint.value?.at(value ? index : previous)?.focus();
-};
-
-const text = (): string => {
-  return inputCells.value.filter((value) => value.length).join("");
-};
-
-const clear = () => {
-  inputCells.value.forEach((_, index, array) => (array[index] = ""));
+  const value = actualText.at(index) ?? "";
+  const previous = !value && index < 2 ? 0 : index - 1;
+  entrypoint.value?.at(value ? index + 1 : previous)?.focus();
 };
 
 const focus = () => {
@@ -64,32 +64,31 @@ const blur = () => {
   entrypoint.value?.forEach((input) => input.blur());
 };
 
-defineExpose<Field>({
-  text,
-  clear,
+defineExpose({
   focus,
   blur,
 });
 </script>
 
 <template>
-  <div class="discret-field" :class="{ active: text().length }">
+  <div class="discret-field" :class="{ active: modelValue.length }">
     <label v-if="placeholder"> {{ placeholder }} </label>
     <div class="inputs-container">
       <input
         v-for="index in length"
-        v-model="inputCells[index]"
         maxlength="1"
         ref="entrypoint"
         class="transparent"
+        :value="modelValue?.at(index - 1)"
         :type="type"
         :key="index"
         :class="{
-          active: inputCells[index],
+          active: modelValue?.at(index - 1),
           large: large,
           error: error,
         }"
-        @input="onInput($event, index)"
+        :readonly="readonly"
+        @input="onInput($event, index - 1)"
       />
     </div>
     <div class="error-container" v-if="error">

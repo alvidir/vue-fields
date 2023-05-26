@@ -1,14 +1,15 @@
 <script setup lang="ts">
 import { ref } from "vue";
-import { Field } from "./types";
 
 interface Props {
+  modelValue: string;
   placeholder?: string;
   large?: boolean;
   items: Array<unknown>;
   maxlength?: number;
   maxheight?: string;
   debounce?: number;
+  readonly?: boolean;
 }
 
 const props = withDefaults(defineProps<Props>(), {
@@ -19,15 +20,17 @@ const props = withDefaults(defineProps<Props>(), {
 interface Events {
   (e: "input", payload: Event): void;
   (e: "click", payload: MouseEvent, item: unknown): void;
+  (e: "update:modelValue", payload: string): void;
 }
 
 const emit = defineEmits<Events>();
-
-const inputText = ref("");
 const entrypoint = ref<HTMLInputElement>();
 
 let timeout: number | undefined = undefined;
 const onInput = (payload: Event) => {
+  const text = entrypoint.value?.value ?? "";
+  emit("update:modelValue", text);
+
   if (props.debounce) {
     clearTimeout(timeout);
     timeout = setTimeout(() => emit("input", payload), props.debounce);
@@ -40,14 +43,6 @@ const onClick = (payload: MouseEvent, item: unknown) => {
   emit("click", payload, item);
 };
 
-const text = (): string => {
-  return inputText.value;
-};
-
-const clear = () => {
-  inputText.value = "";
-};
-
 const focus = () => {
   entrypoint.value?.focus();
 };
@@ -56,22 +51,21 @@ const blur = () => {
   entrypoint.value?.blur();
 };
 
-defineExpose<Field>({
-  text,
-  clear,
+defineExpose({
   focus,
   blur,
 });
 </script>
 
 <template>
-  <div class="search-field" :class="{ active: text(), large: large }">
+  <div class="search-field" :class="{ active: modelValue, large: large }">
     <div class="input-container" :class="{ large: large }" @click="focus">
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
         ref="entrypoint"
-        v-model="inputText"
+        :value="modelValue"
         :maxlength="maxlength"
+        :readonly="readonly"
         @input="onInput"
       />
       <button tabindex="-1" @click="emit('input', $event)">
