@@ -1,11 +1,11 @@
 <script setup lang="ts">
-import { ref } from "vue";
+import { computed, ref } from "vue";
 
 interface Props {
   modelValue: string;
   placeholder?: string;
   large?: boolean;
-  items: Array<unknown>;
+  items?: Array<unknown>;
   maxlength?: number;
   maxheight?: string;
   debounce?: number;
@@ -25,6 +25,10 @@ interface Events {
 
 const emit = defineEmits<Events>();
 const entrypoint = ref<HTMLInputElement>();
+
+const hasMaxHeight = computed((): boolean => {
+  return props.maxheight !== "0";
+});
 
 let timeout: number | undefined = undefined;
 const onInput = (payload: Event) => {
@@ -83,7 +87,7 @@ defineExpose({
         </svg>
       </button>
     </div>
-    <div class="items-container">
+    <div class="items-container" :class="{ visible: hasMaxHeight }">
       <div class="scrollable-list" :class="{ sized: maxheight }">
         <label v-if="!items || !items.length">&#11835;</label>
         <button
@@ -191,8 +195,8 @@ defineExpose({
   position: relative;
   display: inline-block;
 
-  &:focus-within .items-container,
-  &:hover.active .items-container {
+  &:focus-within .items-container.visible,
+  &:hover.active .items-container.visible {
     @extend .shadow-box;
     visibility: visible;
   }
