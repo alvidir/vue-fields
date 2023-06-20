@@ -1,29 +1,93 @@
+<script setup lang="ts">
+import { computed, ref } from "vue";
+
+interface Props {
+  modelValue: string;
+  placeholder?: string;
+  large?: boolean;
+  items?: Array<unknown>;
+  maxlength?: number;
+  maxheight?: string;
+  debounce?: number;
+  readonly?: boolean;
+}
+
+const props = withDefaults(defineProps<Props>(), {
+  maxLength: 255,
+  maxheight: "34vh",
+});
+
+interface Events {
+  (e: "input", payload: Event): void;
+  (e: "click", payload: MouseEvent, item: unknown): void;
+  (e: "update:modelValue", payload: string): void;
+}
+
+const emit = defineEmits<Events>();
+const entrypoint = ref<HTMLInputElement>();
+
+const hasMaxHeight = computed((): boolean => {
+  return props.maxheight !== "0";
+});
+
+let timeout: number | undefined = undefined;
+const onInput = (payload: Event) => {
+  const text = entrypoint.value?.value ?? "";
+  emit("update:modelValue", text);
+
+  if (props.debounce) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => emit("input", payload), props.debounce);
+  } else {
+    emit("input", payload);
+  }
+};
+
+const onClick = (payload: MouseEvent, item: unknown) => {
+  emit("click", payload, item);
+};
+
+const focus = () => {
+  entrypoint.value?.focus();
+};
+
+const blur = () => {
+  entrypoint.value?.blur();
+};
+
+defineExpose({
+  focus,
+  blur,
+});
+</script>
+
 <template>
-  <div class="search-field" :class="{ active: value.length, large: large }">
-    <div class="input-container" :class="{ large: large }" @click="focus()">
+  <div class="search-field" :class="{ active: modelValue, large: large }">
+    <div class="input-container" :class="{ large: large }" @click="focus">
       <label v-if="placeholder" @click="focus"> {{ placeholder }} </label>
       <input
-        ref="entry"
-        v-model="value"
+        ref="entrypoint"
+        :value="modelValue"
         :maxlength="maxlength"
-        @input="onChange"
+        :readonly="readonly"
+        @input="onInput"
       />
-      <button tabindex="-1" @click="onSearch">
+      <button tabindex="-1" @click="emit('input', $event)">
         <svg
           x="0px"
           y="0px"
           viewBox="0 0 487.95 487.95"
-          fill="var(--color-text)"
+          fill="var(--color-text-primary)"
         >
           <path
             d="M481.8,453l-140-140.1c27.6-33.1,44.2-75.4,44.2-121.6C386,85.9,299.5,0.2,193.1,0.2S0,86,0,191.4s86.5,191.1,192.9,191.1
-          c45.2,0,86.8-15.5,119.8-41.4l140.5,140.5c8.2,8.2,20.4,8.2,28.6,0C490,473.4,490,461.2,481.8,453z M41,191.4
-          c0-82.8,68.2-150.1,151.9-150.1s151.9,67.3,151.9,150.1s-68.2,150.1-151.9,150.1S41,274.1,41,191.4z"
+            c45.2,0,86.8-15.5,119.8-41.4l140.5,140.5c8.2,8.2,20.4,8.2,28.6,0C490,473.4,490,461.2,481.8,453z M41,191.4
+            c0-82.8,68.2-150.1,151.9-150.1s151.9,67.3,151.9,150.1s-68.2,150.1-151.9,150.1S41,274.1,41,191.4z"
           />
         </svg>
       </button>
     </div>
-    <div class="items-container">
+    <div class="items-container" :class="{ visible: hasMaxHeight }">
       <div class="scrollable-list" :class="{ sized: maxheight }">
         <label v-if="!items || !items.length">&#11835;</label>
         <button
@@ -31,7 +95,7 @@
           v-for="(item, index) in items"
           :key="index"
           class="item"
-          @click="onSelect(item)"
+          @click="onClick($event, item)"
         >
           <slot :item="item"> </slot>
         </button>
@@ -40,68 +104,12 @@
   </div>
 </template>
 
-<script lang="ts">
-import { defineComponent, PropType } from "vue";
-import {
-  INPUT_EVENT_NAME,
-  CLICK_EVENT_NAME,
-  SELECT_EVENT_NAME,
-} from "./constants";
-
-export default defineComponent({
-  name: "SearchField",
-  components: {},
-
-  emits: [INPUT_EVENT_NAME, CLICK_EVENT_NAME, SELECT_EVENT_NAME],
-
-  props: {
-    placeholder: String,
-    large: Boolean,
-    items: Array as PropType<Array<unknown>>,
-    maxheight: {
-      type: String,
-      default: "30vh",
-    },
-    maxlength: {
-      type: Number,
-      default: 255,
-    },
-  },
-
-  data() {
-    return {
-      value: "",
-    };
-  },
-
-  methods: {
-    focus() {
-      let entryRef = this.$refs.entry as HTMLInputElement;
-      entryRef.focus();
-    },
-
-    onSearch() {
-      if (this.value.length) {
-        this.$emit(CLICK_EVENT_NAME, this.value);
-      }
-    },
-
-    onChange() {
-      this.$emit(INPUT_EVENT_NAME, this.value);
-    },
-
-    onSelect(selected: string) {
-      this.$emit(SELECT_EVENT_NAME, selected);
-    },
-  },
-});
-</script>
-
 <style scoped lang="scss">
-@import "./global.scss";
+@import "./styles.scss";
 
 .border-line {
-  @extend .round-corners, .fib-5;
+  @extend .round-corners;
+
   &:focus-within {
     outline: $fib-2 * 1px solid;
   }
@@ -113,24 +121,25 @@ export default defineComponent({
 }
 
 .items-container {
-  @extend .round-corners, .fib-6;
+  @extend .round-corners-fib-6;
+
   position: absolute;
   visibility: hidden;
   width: 100%;
   bottom: 100%;
-  background-color: var(--color-background-primary);
+  background-color: var(--color-bg-primary);
   padding-top: $active-height + $fib-6 * 1px;
-  padding-bottom: $fib-5 * 1px;
+  padding-bottom: $fib-4 * 1px;
   transform: translateY(100%);
+  z-index: 1;
 
   .scrollable-list {
     display: flex;
     flex-direction: column;
-    overflow-y: auto;
+    overflow-y: scroll;
 
-    &.sized {
-      max-height: v-bind(maxheight);
-    }
+    /* firefox 64 */
+    scrollbar-color: var(--color-scrollbar) transparent;
 
     /* width */
     &::-webkit-scrollbar {
@@ -138,20 +147,24 @@ export default defineComponent({
       height: $fib-4 * 1px;
     }
 
-    /* Track */
-    &::-webkit-scrollbar-track {
-      background: none;
+    &::-webkit-scrollbar-track:hover {
+      background: transparent;
     }
 
     /* Handle */
     &::-webkit-scrollbar-thumb {
-      @extend .round-corners, .fib-5;
+      @extend .round-corners;
+
       background: var(--color-scrollbar);
     }
 
     /* Handle on hover */
     &::-webkit-scrollbar-thumb:hover {
       background: var(--color-scrollbar-hover);
+    }
+
+    &.sized {
+      max-height: v-bind(maxheight);
     }
   }
 
@@ -162,18 +175,17 @@ export default defineComponent({
   }
 
   button.item {
-    @extend .round-corners, .fib-4;
+    @extend .round-corners-fib-4;
+
     margin-left: $fib-4 * 1px;
     margin-right: $fib-4 * 1px;
-    padding: $fib-4 * 1px;
-    padding-top: $fib-6 * 1px;
-    padding-bottom: $fib-6 * 1px;
+    color: var(--color-text-primary);
     text-align: start;
     background: none;
     border: none;
 
     &:hover:not(:active) {
-      background: var(--color-background-highlight);
+      background: var(--color-button-hover);
     }
   }
 }
@@ -183,8 +195,9 @@ export default defineComponent({
   position: relative;
   display: inline-block;
 
-  &:focus-within .items-container,
-  &:hover.active .items-container {
+  &:focus-within .items-container.visible,
+  &:hover.active .items-container.visible {
+    @extend .shadow-box;
     visibility: visible;
   }
 
@@ -245,7 +258,7 @@ export default defineComponent({
       border: none;
       padding: 0;
 
-      transition: height $transition-lapse, color $transition-lapse;
+      transition: height $slower-fade, color $medium-fade;
 
       &:hover {
         font-weight: 800;
